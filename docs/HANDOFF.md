@@ -12,7 +12,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 | Paso | Qué | Estado |
 |---|---|---|
-| 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho |
+| 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho en local. **Falta crear el repo vacío en GitHub** (el agente no pudo: sin `gh` y sin sesión de GitHub en su navegador), subirlo (`git push -u origin main`) y añadirlo como submódulo en `market-hub` |
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho en `market-hub-landing` (`main`), **sin desplegar** |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
 | 4 | Login con Google y con Apple; crear cuenta desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
@@ -45,7 +45,8 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 - **Aspecto**: el del portal. Colores de `global.css` en `src/lib/theme.ts`, IBM Plex Sans y Mono
   (`@expo-google-fonts`), secciones bajo una raya y sin cajas, verde y rojo solo para un movimiento.
   El gráfico y las marcas se dibujan con `react-native-svg` (`src/components/`).
-- **Comprobado** (2026-10-07): `make check` en verde (tipos, lint y `expo-doctor`, 21 de 21). En la
+- **Comprobado** (2026-10-07): `make check` en verde (tipos, lint y `expo-doctor`, 21 de 21), y
+  `npx expo export` compila los paquetes de iPhone y de Android sin errores. En la
   vista de navegador (`make web`, 375 px) contra el portal en local con cifras de ejemplo y la
   cuenta de demostración: contraseña equivocada (sale el mensaje del portal), entrar, Overview
   entero, buscar "johnson" y seguir JNJ, guardar (el `PUT` pasa con el token y sin `Origin` propio
