@@ -15,7 +15,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho (repo público en GitHub, submódulo de `market-hub`) |
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00023-q6q`) |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
-| 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho en la app y en el portal (2026-10-07). **Falta**: añadir la URI de vuelta en el cliente OAuth de Google, desplegar el portal y probarlo en el teléfono |
+| 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00025-gj8`; la URI de vuelta ya está en el cliente OAuth). **Falta** que el usuario lo pruebe en el teléfono |
 | 4 | Login con Apple; crear cuenta con email desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
 | 5 | Analysis, Watchlist y Community | Pendiente |
 | 6 | TestFlight y prueba cerrada de Google Play | Pendiente |
