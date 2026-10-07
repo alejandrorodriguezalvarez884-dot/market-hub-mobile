@@ -13,7 +13,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | Paso | Qué | Estado |
 |---|---|---|
 | 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho (repo público en GitHub, submódulo de `market-hub`) |
-| 2 | Sesión por token en la API del portal, con sus tests | Hecho en `market-hub-landing` (`main`), **sin desplegar** |
+| 2 | Sesión por token en la API del portal, con sus tests | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00023-q6q`) |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
 | 4 | Login con Google y con Apple; crear cuenta desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
 | 5 | Analysis, Watchlist y Community | Pendiente |
@@ -55,21 +55,22 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 - **Sin probar**: nada en un teléfono ni en un simulador (este Mac no tiene Xcode ni emulador de
   Android): teclado, llavero, zonas seguras, el navegador de la app y el gesto de recargar solo se
   han visto en su versión web. Borrar la cuenta desde la pantalla (sí está probado en los tests de
-  la API). Contra el portal público, porque aún no tiene las rutas de la app.
+  la API). Entrar desde la app contra el portal público con una cuenta de verdad (sus rutas sí
+  responden: comprobado con `curl`).
 
 ## Cómo probarlo en el móvil (Expo Go)
 
-Hasta que el portal se despliegue, la app solo puede hablar con el portal de este equipo:
-
 1. Instalar **Expo Go** en el teléfono. Teléfono y ordenador en la misma wifi.
-2. Terminal 1: `make api` (el portal en local, abierto a la red de casa, puerto 8000, con datos
-   de Yahoo; `make api SAMPLE=1` para cifras de ejemplo).
-3. Una vez: `make demo` crea la cuenta de demostración con una cartera pequeña. Su email y su
-   contraseña están al principio de `scripts/seed-local.sh` (solo valen en local).
-4. Terminal 2: `make start LOCAL=1` y escanear el QR.
+2. `make start` y escanear el QR (iPhone: con la cámara; Android: desde Expo Go).
+3. Entrar con una cuenta de email y contraseña de themarkethub.app (las de Google, aún no).
 
-Con el portal ya desplegado: `make start` a secas, y se entra con una cuenta de email y contraseña
-de themarkethub.app.
+Para trabajar contra el portal de este equipo en vez del público:
+
+1. Terminal 1: `make api` (el portal en local, abierto a la red de casa, puerto 8000, con datos
+   de Yahoo; `make api SAMPLE=1` para cifras de ejemplo).
+2. Una vez: `make demo` crea la cuenta de demostración con una cartera pequeña. Su email y su
+   contraseña están al principio de `scripts/seed-local.sh` (solo valen en local).
+3. Terminal 2: `make start LOCAL=1` y escanear el QR.
 
 ## Lo que hay que saber antes de seguir
 
