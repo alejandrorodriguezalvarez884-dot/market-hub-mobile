@@ -4,6 +4,7 @@
 #   make start           the app for Expo Go, talking to the public portal (scan the QR with the phone)
 #   make api             the portal's API on this machine, for the app to talk to instead
 #   make start LOCAL=1   the app for Expo Go, talking to that local portal
+#   make start TUNNEL=1  the same app, reached through a tunnel instead of the local network
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
@@ -21,8 +22,8 @@ help: ## List the targets
 install: ## Install the app's dependencies
 	npm ci
 
-start: ## Run the app for Expo Go (scan the QR with the phone). LOCAL=1: against `make api` on this machine
-	$(if $(LOCAL),EXPO_PUBLIC_API_URL=$(LOCAL_API)) npx expo start
+start: ## Run the app for Expo Go (scan the QR with the phone). LOCAL=1: against `make api` on this machine. TUNNEL=1: when the phone cannot reach this machine over the wifi
+	$(if $(LOCAL),EXPO_PUBLIC_API_URL=$(LOCAL_API)) npx expo start $(if $(TUNNEL),--tunnel)
 
 web: ## Look at the app in a browser at http://localhost:8090, against `make api` (development only)
 	EXPO_PUBLIC_API_URL=http://localhost:8000 npx expo start --web --port 8090
