@@ -12,7 +12,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 | Paso | Qué | Estado |
 |---|---|---|
-| 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho en local. **Falta crear el repo vacío en GitHub** (el agente no pudo: sin `gh` y sin sesión de GitHub en su navegador), subirlo (`git push -u origin main`) y añadirlo como submódulo en `market-hub` |
+| 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho (repo público en GitHub, submódulo de `market-hub`) |
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho en `market-hub-landing` (`main`), **sin desplegar** |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
 | 4 | Login con Google y con Apple; crear cuenta desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
