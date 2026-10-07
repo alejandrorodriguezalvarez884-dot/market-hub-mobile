@@ -1,21 +1,13 @@
 // The account: who is signed in, the way out, and the way to take everything down.
 import { openBrowserAsync } from "expo-web-browser";
 import { useState } from "react";
-import { Alert, Platform, View } from "react-native";
+import { View } from "react-native";
 
-import { Button, Head, Label, Notice, Screen, Section, Txt } from "@/components/ui";
+import { Button, Label, Notice, Screen, Section, Txt } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
+import { confirm } from "@/lib/confirm";
 import { useSession } from "@/lib/session";
 import { space } from "@/lib/theme";
-
-// Asked before anything that cannot be undone. A browser has its own way of asking.
-function confirm(title: string, text: string, action: string): Promise<boolean> {
-  if (Platform.OS === "web") return Promise.resolve(globalThis.confirm(`${title}\n\n${text}`));
-  return new Promise((resolve) => Alert.alert(title, text, [
-    { text: "Cancel", style: "cancel", onPress: () => resolve(false) },
-    { text: action, style: "destructive", onPress: () => resolve(true) },
-  ], { cancelable: true, onDismiss: () => resolve(false) }));
-}
 
 export default function Account() {
   const { user, signOut } = useSession();
@@ -37,8 +29,7 @@ export default function Account() {
   }
 
   return (
-    <Screen>
-      <Head title="Account" />
+    <Screen headed>
       <Section title="Signed in as">
         <View style={{ gap: 2 }}>
           <Txt size={16} weight="semibold" tone="strong">{user?.name}</Txt>

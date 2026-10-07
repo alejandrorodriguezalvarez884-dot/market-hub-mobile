@@ -17,24 +17,48 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
 | 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00025-gj8`; la URI de vuelta ya está en el cliente OAuth). **Falta** que el usuario lo pruebe en el teléfono |
 | 4 | Login con Apple; crear cuenta con email desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
-| 5 | Analysis, Watchlist y Community | Pendiente |
+| 5 | Analysis, Watchlist y Community | Hecho (2026-10-07) y probado en la vista de navegador; **falta verlo en un teléfono** |
 | 6 | TestFlight y prueba cerrada de Google Play | Pendiente |
 
 ## Dónde estamos
 
 - **Expo SDK 57**, React Native 0.86, React 19, `expo-router` (rutas en `src/app/`), TypeScript
   estricto. Sin carpetas `ios/` ni `android/`: las genera Expo al compilar.
-- **Pantallas**: `sign-in` ("Continue with Google" y, debajo, email y contraseña) y, ya dentro, tres pestañas (`src/app/(hub)/`):
-  - **Overview** (`index.tsx`): lo que el dashboard de la web, puesto en una columna. Saludo, las
-    cuatro cifras (valor, hoy, ganancia, un año frente al índice), "Your portfolio, read back" (las
-    frases del código al momento y las del modelo cuando llegan, como en la web), lo que más se
-    mueve hoy, el gráfico de las posiciones frente a los índices (1M, 3M, YTD, 1Y; se encienden y
-    apagan los índices) con su tira de periodos, las posiciones, de qué está hecha la cartera y la
-    watchlist. Tirar hacia abajo recarga. Tocar una acción abre su ficha de la web
-    (`/quote/?t=`) en el navegador de la app.
+- **Pantallas**: `sign-in` ("Continue with Google" y, debajo, email y contraseña) y, ya dentro,
+  cinco pestañas en el orden del menú de la web (`src/app/(hub)/(tabs)/`), más tres pantallas que
+  se abren encima (`src/app/(hub)/`): el editor de la cartera, la cuenta y la ficha de una acción.
+  - **Overview** (`index.tsx`): lo que el dashboard de la web, en una columna. Saludo, las cuatro
+    cifras, "Your portfolio, read back" (las frases del código al momento y las del modelo cuando
+    llegan), lo que más se mueve hoy, el gráfico frente a los índices con su tira de periodos, las
+    posiciones, de qué está hecha la cartera y la watchlist. Tirar hacia abajo recarga.
+  - **Analysis** (`analysis.tsx`): de qué está hecha (por sector, país, volatilidad y tamaño, con
+    sus tickers y rentabilidades), frente a los índices por periodo (con la marca de la regla y
+    los puntos), cómo se mueve y cómo reparte su peso, hoy posición por posición, y todas las
+    posiciones ordenadas por la cifra que se elija.
+  - **Watchlist** (`watchlist.tsx`): las acciones seguidas, una por línea (precio, sparkline, sus
+    tres estados y su frase), las que se tienen si se encienden, y cualquier otra que se busque
+    (hasta 20; "Follow" la pasa a la lista). Vista **Map**: todas en un plano, como en la web.
+    Tocar una abre **su ficha** (`stock/[ticker].tsx`): gráfico de velas o línea con las medias
+    de 20, 50 y 200 sesiones (3M a 2Y; `components/price-chart.tsx`, dibujado con SVG, sin
+    volumen) y la **lectura** aspecto por aspecto con los mismos medidores que la web
+    (`components/reading.tsx`): precio frente a su media de 50, tendencia, fuerza frente al
+    índice, sector, momentum, rango de 52 semanas, volumen, crecimiento por consenso y PER. Las
+    frases del modelo sustituyen a las del código cuando llegan (`/api/watchlist/read`).
+  - **Community** (`community.tsx`), con sus dos secciones:
+    - *Shared portfolios* (`components/shared-portfolios.tsx`): compartir la cartera (los tres
+      pasos, el nombre, dejar de compartir), dónde estás por periodo y el ranking con índices y
+      media; una línea se abre sobre lo que tiene esa cartera.
+    - *Monthly competition* (`components/competition.tsx`, `competition-entry.tsx`): el mes en
+      juego y el siguiente con su cuenta atrás, podio, el mes sesión a sesión (se eligen las
+      líneas, hasta seis), clasificación, discusión del mes (`components/thread.tsx`: comentar,
+      responder, borrar), el formulario de la apuesta (pesos con − / + y campo, porque React
+      Native no trae un deslizador), el historial y las reglas.
+  - **More** (`more.tsx`): lo que no tiene pestaña. Portfolio y Account and data (pantallas de la
+    app), Fundamentals Lab y Earnings Radar, y las secciones públicas (Markets, News, Opinion,
+    Media), que se abren en el navegador.
   - **Portfolio** (`portfolio.tsx`): buscar una empresa y añadirla como posición (acciones y coste
-    medio, este opcional) o a la watchlist; quitar; "Save and open the overview". Las mismas
-    comprobaciones que la web antes de enviar, y el servidor valida igual.
+    medio, este opcional) o a la watchlist; quitar; guardar. Se llega desde Overview ("Edit"),
+    Analysis, Watchlist, Community y More.
   - **Account** (`account.tsx`): quién ha entrado, salir, enlace a la página de privacidad y
     **borrar la cuenta** (lo pide Apple a toda app con cuentas), con confirmación.
 - **Sesión** (`src/lib/session.tsx`, `api.ts`, `storage.ts`): la app manda email y contraseña a
@@ -46,18 +70,31 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 - **Aspecto**: el del portal. Colores de `global.css` en `src/lib/theme.ts`, IBM Plex Sans y Mono
   (`@expo-google-fonts`), secciones bajo una raya y sin cajas, verde y rojo solo para un movimiento.
   El gráfico y las marcas se dibujan con `react-native-svg` (`src/components/`).
-- **Comprobado** (2026-10-07): `make check` en verde (tipos, lint y `expo-doctor`, 21 de 21), y
+- **Comprobado del primer tramo** (2026-10-07): `make check` en verde (tipos, lint y `expo-doctor`, 21 de 21), y
   `npx expo export` compila los paquetes de iPhone y de Android sin errores. En la
   vista de navegador (`make web`, 375 px) contra el portal en local con cifras de ejemplo y la
   cuenta de demostración: contraseña equivocada (sale el mensaje del portal), entrar, Overview
   entero, buscar "johnson" y seguir JNJ, guardar (el `PUT` pasa con el token y sin `Origin` propio
   del portal), quitar, el aviso de "faltan las acciones" sin enviar nada, recargar la página y
   seguir dentro, salir y que `/portfolio` ya no se alcance.
-- **Sin probar**: nada en un teléfono ni en un simulador (este Mac no tiene Xcode ni emulador de
-  Android): teclado, llavero, zonas seguras, el navegador de la app y el gesto de recargar solo se
-  han visto en su versión web. Borrar la cuenta desde la pantalla (sí está probado en los tests de
-  la API). Entrar desde la app contra el portal público con una cuenta de verdad (sus rutas sí
-  responden: comprobado con `curl`).
+- **Comprobado de Analysis, Watchlist y Community** (2026-10-07): `make check` en verde y los dos
+  paquetes nativos compilan. En la vista de navegador (375 px) contra el portal en local con cifras
+  de ejemplo: Analysis entera; Watchlist en lista y en mapa, encender las posiciones, abrir una
+  acción desde el mapa, su gráfico y su lectura completa (con consenso de analistas); Community con
+  el ranking y la competición (cuenta atrás, podio, gráfico del mes, clasificación, reglas);
+  añadir acciones a la apuesta y ver cómo se reparten los pesos; More y abrir el editor de la
+  cartera desde ahí.
+- **Sin probar**: **nada de lo anterior en un teléfono** (el usuario sí vio en su iPhone, con
+  Expo Go, el primer tramo y el login con Google): gestos, teclado, zonas seguras y rendimiento
+  del gráfico de velas a dos años. Tampoco: enviar o retirar la apuesta, compartir la cartera,
+  comentar y borrar comentarios (las rutas están cubiertas por los tests del portal, pero no se
+  pulsaron los botones), "Follow" desde Watchlist, y las frases del modelo (en local no hay
+  clave). Borrar la cuenta desde la pantalla.
+- **Lo que la web tiene y la app todavía no**: en Overview, las noticias de tus acciones y las
+  tarjetas de herramientas (estas están en More); en la ficha de una acción, el volumen bajo el
+  gráfico; en Watchlist, el muro de varias gráficas a la vez y la tabla ordenable (en un móvil
+  hay una gráfica por pantalla); en Account, la lista de lo que se guarda (comentarios, apuestas)
+  y cambiar la contraseña.
 
 ## Cómo probarlo en el móvil (Expo Go)
 

@@ -1,25 +1,22 @@
-// My Hub: the private area, one tab per section. More sections of the site's My Hub come later.
-import { Tabs } from "expo-router/tabs";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+// My Hub: the tabs, and over them the screens reached from one (the portfolio's editor, the account).
+import { Stack } from "expo-router/stack";
 
-import { Icon } from "@/components/marks";
 import { color, font } from "@/lib/theme";
 
 export default function Hub() {
-  const insets = useSafeAreaInsets();
   return (
-    <Tabs screenOptions={{
-      headerShown: false,
-      sceneStyle: { backgroundColor: color.page },
-      // Tall enough for the mark and its word, above the phone's home bar.
-      tabBarStyle: { backgroundColor: color.page, borderTopColor: color.line, height: 58 + insets.bottom, paddingTop: 6 },
-      tabBarActiveTintColor: color.inkStrong,
-      tabBarInactiveTintColor: color.muted,
-      tabBarLabelStyle: { fontFamily: font.medium, fontSize: 11 },
+    <Stack screenOptions={{
+      contentStyle: { backgroundColor: color.page },
+      headerStyle: { backgroundColor: color.page },
+      headerTintColor: color.inkStrong,
+      headerTitleStyle: { fontFamily: font.semibold, fontSize: 16 },
+      headerShadowVisible: false,
+      headerBackButtonDisplayMode: "minimal",
     }}>
-      <Tabs.Screen name="index" options={{ title: "Overview", tabBarIcon: ({ color: tint }) => <Icon name="overview" tint={tint} /> }} />
-      <Tabs.Screen name="portfolio" options={{ title: "Portfolio", tabBarIcon: ({ color: tint }) => <Icon name="portfolio" tint={tint} /> }} />
-      <Tabs.Screen name="account" options={{ title: "Account", tabBarIcon: ({ color: tint }) => <Icon name="account" tint={tint} /> }} />
-    </Tabs>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="portfolio" options={{ title: "Portfolio" }} />
+      <Stack.Screen name="account" options={{ title: "Account and data" }} />
+      <Stack.Screen name="stock/[ticker]" options={{ title: "" }} />
+    </Stack>
   );
 }

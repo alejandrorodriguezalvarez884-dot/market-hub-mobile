@@ -32,20 +32,36 @@ export function GoogleMark({ size = 18 }: { size?: number }) {
   );
 }
 
+// The marks of the site's own menu (market-hub-landing/site/src/components/App.astro), and a few more.
 const ICONS = {
-  overview: "M3 17l5-5 4 3 9-9M15 6h6v6",
-  portfolio: "M4 6h16M4 12h16M4 18h10",
-  account: "M12 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0",
+  overview: "M3 13h6V3H3v10Zm0 8h6v-6H3v6Zm8 0h10V11H11v10Zm0-18v6h10V3H11Z",
+  portfolio: "M4 7h16v12H4zM9 7V5h6v2",
+  analysis: "M12 3a9 9 0 1 0 9 9h-9V3Zm3 .5A9 9 0 0 1 20.5 9H15V3.5Z",
+  watchlist: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
+  community: "M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20a6 6 0 0 1 12 0m1.5-5.5A6 6 0 0 1 22 20",
+  tools: "M4 19V9m6 10V5m6 14v-7m4 7H2",
+  earnings: "M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7",
+  account: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0",
+  markets: "M3 17l6-6 4 4 8-8M15 7h6v6",
+  news: "M4 5h13v14H6a2 2 0 0 1-2-2V5Zm13 4h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5",
+  opinion: "M4 5h16v11H9l-5 4V5Zm4 4h8M8 12h5",
+  media: "M3 6h18v12H3zM10 9.5v5l4.5-2.5-4.5-2.5Z",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+  chevron: "M9 5l7 7-7 7",
+  out: "M14 5h5v5M19 5l-8 8M11 7H6v11h11v-5",
+  contrast: "M7 7h13m0 0-3-3m3 3-3 3M17 17H4m0 0 3-3m-3 3 3 3",
   search: "M10.5 17a6.5 6.5 0 1 0 0-13a6.5 6.5 0 0 0 0 13ZM15.5 15.5 20 20",
   close: "M6 6l12 12M18 6 6 18",
 } as const;
 
 // A few strokes in the manner of the site's own marks.
-export function Icon({ name, size = 22, tint = color.muted }: { name: keyof typeof ICONS; size?: number; tint?: ColorValue }) {
+export type IconName = keyof typeof ICONS;
+
+export function Icon({ name, size = 22, tint = color.muted }: { name: IconName; size?: number; tint?: ColorValue }) {
   return (
     <View aria-hidden>
       <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-        <Path d={ICONS[name]} stroke={tint} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d={ICONS[name]} stroke={tint} strokeWidth={name === "more" ? 2.6 : 1.6} strokeLinecap="round" strokeLinejoin="round" />
       </Svg>
     </View>
   );

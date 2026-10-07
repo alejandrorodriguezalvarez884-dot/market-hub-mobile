@@ -3,10 +3,11 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CompanySearch } from "@/components/company-search";
 import { Icon } from "@/components/marks";
-import { Button, Field, Head, Label, Notice, Screen, Section, Txt, Waiting } from "@/components/ui";
+import { Button, Field, Label, Notice, Screen, Section, Txt, Waiting } from "@/components/ui";
 import { api, message } from "@/lib/api";
 import { useLoad } from "@/lib/load";
 import { color, font, radius, space } from "@/lib/theme";
@@ -24,6 +25,7 @@ const asText = (v: number | null) => (v == null || v === 0 ? "" : String(v));
 
 export default function PortfolioScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { data, error, refreshing, refresh } = useLoad(getPortfolio);
   const [positions, setPositions] = useState<Draft[]>([]);
   const [watchlist, setWatchlist] = useState<string[]>([]);
@@ -72,7 +74,9 @@ export default function PortfolioScreen() {
       await api<Portfolio>("/api/portfolio", { method: "PUT", body: { positions: rows, watchlist } });
       setDirty(false);
       setSaid(null);
-      router.navigate("/");
+      // Back to where the editor was opened from; the overview asks for its figures again.
+      if (router.canGoBack()) router.back();
+      else router.replace("/");
     } catch (e) {
       setSaid({ text: message(e, "Saving failed."), error: true });
     } finally {
@@ -81,15 +85,15 @@ export default function PortfolioScreen() {
   }
 
   const footer = data ? (
-    <View style={styles.footer}>
+    <View style={[styles.footer, { paddingBottom: space.md + insets.bottom }]}>
       <Button title="Save and open the overview" onPress={save} busy={saving} disabled={!dirty} />
       {said ? <Txt size={13} tone={said.error ? "down" : "muted"} accessibilityLiveRegion="polite">{said.text}</Txt> : null}
     </View>
   ) : null;
 
   return (
-    <Screen refreshing={refreshing} onRefresh={dirty ? undefined : refresh} footer={footer}>
-      <Head title="Your portfolio" note="Positions you hold and stocks you follow. Saved to your private account." />
+    <Screen headed refreshing={refreshing} onRefresh={dirty ? undefined : refresh} footer={footer}>
+      <Txt size={13} tone="muted">Positions you hold and stocks you follow. Saved to your private account.</Txt>
       {error ? <Notice text={error} /> : null}
       {!data ? (error ? null : <Waiting />) : (
         <>

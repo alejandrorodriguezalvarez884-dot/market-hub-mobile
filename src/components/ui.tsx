@@ -24,16 +24,18 @@ export function Txt({ size = 15, weight = "regular", tone = "ink", num = false, 
 
 export const Label = (props: TxtProps) => <Txt size={12.5} tone="muted" {...props} />;
 
-type ScreenProps = PropsWithChildren<{ refreshing?: boolean; onRefresh?: () => void; footer?: ReactNode }>;
+type ScreenProps = PropsWithChildren<{ refreshing?: boolean; onRefresh?: () => void; footer?: ReactNode;
+  // Under a header of its own (a screen reached from a tab), which already clears the notch.
+  headed?: boolean }>;
 
 // A screen that scrolls, clear of the notch, with what is pinned to its bottom under it.
-export function Screen({ children, refreshing = false, onRefresh, footer }: ScreenProps) {
+export function Screen({ children, refreshing = false, onRefresh, footer, headed = false }: ScreenProps) {
   const insets = useSafeAreaInsets();
   return (
     <View style={styles.fill}>
       <ScrollView
         style={styles.fill}
-        contentContainerStyle={[styles.screen, { paddingTop: insets.top + space.lg }]}
+        contentContainerStyle={[styles.screen, { paddingTop: headed ? space.lg : insets.top + space.lg }]}
         keyboardShouldPersistTaps="handled"
         refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={color.muted} /> : undefined}>
         {children}
@@ -137,6 +139,62 @@ export function Waiting() {
 
 export const Rule = () => <View style={styles.rule} />;
 
+// A figure with its name over it and a line under it. They sit two to a row (statGrid).
+export function Stat({ label, value, note, tone = "strong" }: { label: string; value: string; note?: string; tone?: Tone }) {
+  return (
+    <View style={styles.stat}>
+      <Label>{label}</Label>
+      <Txt num size={22} weight="medium" tone={tone} style={{ marginTop: 2 }} numberOfLines={1} adjustsFontSizeToFit>{value}</Txt>
+      {note ? <Txt size={12} tone="muted" style={{ marginTop: 2, lineHeight: 17 }}>{note}</Txt> : null}
+    </View>
+  );
+}
+export const statGrid: ViewStyle = { flexDirection: "row", flexWrap: "wrap", rowGap: space.lg, paddingRight: 0 };
+
+// The colour of a move, for a figure that is otherwise in the strong ink.
+export const strong = (v: number | null | undefined): Tone => (v == null || v === 0 || !Number.isFinite(v) ? "strong" : v > 0 ? "up" : "down");
+
+// Plain words to choose between; the chosen one is underlined. They scroll sideways when they do not fit.
+export function WordTabs<K extends string>({ items, value, onChange }: { items: { key: K; label: string }[]; value: K; onChange: (key: K) => void }) {
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.words} accessibilityRole="tablist">
+      {items.map((item) => (
+        <Pressable key={item.key} onPress={() => onChange(item.key)} hitSlop={8} accessibilityRole="tab" accessibilityState={{ selected: item.key === value }}
+          style={[styles.word, item.key === value && styles.wordOn]}>
+          <Txt size={13} tone={item.key === value ? "strong" : "muted"}>{item.label}</Txt>
+        </Pressable>
+      ))}
+    </ScrollView>
+  );
+}
+
+// A ticker in its small box.
+export function Chip({ text, onPress }: { text: string; onPress?: () => void }) {
+  const body = <Txt num size={11.5}>{text}</Txt>;
+  return onPress ? <Pressable onPress={onPress} hitSlop={6} accessibilityRole="link" style={styles.chip}>{body}</Pressable> : <View style={styles.chip}>{body}</View>;
+}
+
+// One mark on a ruler: a stem from the zero in the middle, and a dot at the move. A move beyond
+// the scale is drawn at the edge, hollow.
+export function Track({ move, scale }: { move: number | null | undefined; scale: number }) {
+  const known = typeof move === "number" && Number.isFinite(move);
+  const reach = known ? Math.min(1, Math.abs(move) / scale) * 50 : 0;
+  const tint = !known || move === 0 ? color.muted : move > 0 ? color.up : color.down;
+  const off = known && Math.abs(move) > scale;
+  return (
+    <View style={styles.track} aria-hidden>
+      <View style={styles.trackLine} />
+      <View style={styles.trackZero} />
+      {known ? (
+        <>
+          <View style={[styles.trackStem, { backgroundColor: tint, width: `${reach}%`, [move < 0 ? "right" : "left"]: "50%" }]} />
+          <View style={[styles.trackDot, { left: `${50 + (move < 0 ? -reach : reach)}%`, borderColor: tint, backgroundColor: off ? color.page : tint }]} />
+        </>
+      ) : null}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   fill: { flex: 1, backgroundColor: color.page },
   screen: { paddingHorizontal: space.lg, paddingBottom: space.xxl, gap: space.xl, width: "100%", maxWidth: 640, alignSelf: "center" },
@@ -156,4 +214,14 @@ const styles = StyleSheet.create({
   noticeWarn: { borderColor: "rgba(224, 179, 65, 0.4)", backgroundColor: color.warnSoft },
   skeleton: { borderRadius: 2, backgroundColor: color.raised },
   rule: { height: 1, backgroundColor: color.line },
+  stat: { width: "50%", paddingRight: space.lg },
+  words: { gap: 18, paddingRight: space.lg },
+  word: { paddingVertical: 3, borderBottomWidth: 1, borderBottomColor: "transparent" },
+  wordOn: { borderBottomColor: color.inkStrong },
+  chip: { borderWidth: 1, borderColor: color.lineStrong, borderRadius: 2, paddingHorizontal: 5, paddingVertical: 1 },
+  track: { flex: 1, height: 14, justifyContent: "center" },
+  trackLine: { position: "absolute", left: 0, right: 0, height: 1, backgroundColor: color.line },
+  trackZero: { position: "absolute", left: "50%", width: 1, height: 8, marginLeft: -0.5, backgroundColor: color.lineStrong },
+  trackStem: { position: "absolute", height: 2 },
+  trackDot: { position: "absolute", width: 8, height: 8, marginLeft: -4, borderRadius: 4, borderWidth: 1.5 },
 });

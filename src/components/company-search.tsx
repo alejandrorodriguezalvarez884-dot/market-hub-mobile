@@ -10,7 +10,7 @@ import { tidyName } from "@/lib/format";
 import { color, radius, space } from "@/lib/theme";
 import type { Company } from "@/lib/types";
 
-export function CompanySearch({ label, onPick }: { label: string; onPick: (c: Company) => void }) {
+export function CompanySearch({ label, onPick, action = "Add" }: { label: string; onPick: (c: Company) => void; action?: string }) {
   const [q, setQ] = useState("");
   // What the portal answered, and to what: an answer to something no longer typed is not shown.
   const [answer, setAnswer] = useState<{ to: string; found: Company[]; note: string | null } | null>(null);
@@ -47,11 +47,11 @@ export function CompanySearch({ label, onPick }: { label: string; onPick: (c: Co
       {found.length ? (
         <View style={styles.list} accessibilityRole="list">
           {found.map((c, i) => (
-            <Pressable key={c.ticker} onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`Add ${c.ticker}, ${tidyName(c.name)}`}
+            <Pressable key={c.ticker} onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`${action} ${c.ticker}, ${tidyName(c.name)}`}
               style={({ pressed }) => [styles.item, i > 0 && styles.itemRule, pressed && { backgroundColor: color.raised }]}>
               <Txt size={14} weight="semibold" tone="strong" style={{ width: 64 }}>{c.ticker}</Txt>
               <Txt size={13} tone="muted" numberOfLines={1} style={{ flex: 1 }}>{tidyName(c.name)}</Txt>
-              <Txt size={13} tone="strong">Add</Txt>
+              <Txt size={13} tone="strong">{action}</Txt>
             </Pressable>
           ))}
         </View>

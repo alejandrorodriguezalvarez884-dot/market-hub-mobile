@@ -1,23 +1,20 @@
 // Overview: the portfolio today. What it is worth, how it reads, how it stands against the
 // indices, what it is made of. It describes; it never says what to do with a stock.
 import { useRouter } from "expo-router";
-import { openBrowserAsync } from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { CompareChart } from "@/components/compare-chart";
 import { ShareBar, Sparkline, StackedBar } from "@/components/marks";
-import { Button, Head, Label, Notice, Panel, Rule, Screen, Section, Txt, Waiting, type Tone } from "@/components/ui";
-import { SITE, api } from "@/lib/api";
+import { Button, Head, Label, Notice, Panel, Rule, Screen, Section, Stat, Txt, Waiting, statGrid, strong } from "@/components/ui";
+import { api } from "@/lib/api";
 import { money, pct, price, signedMoney, signedPct, tidyName, toneOf } from "@/lib/format";
+import { getDashboard, openQuote } from "@/lib/hub";
 import { useLoad } from "@/lib/load";
 import { useSession } from "@/lib/session";
 import { color, space } from "@/lib/theme";
 import type { Dashboard, Group, Insights, Row, Watch } from "@/lib/types";
 
-const getDashboard = () => api<Dashboard>("/api/dashboard");
-// A stock's page on the portal: its chart, its figures and its news.
-const openQuote = (ticker: string) => void openBrowserAsync(`${SITE}/quote/?t=${encodeURIComponent(ticker)}`);
 
 function greeting(name: string) {
   const hour = new Date().getHours();
@@ -30,7 +27,7 @@ export default function Overview() {
   const router = useRouter();
   const { data: d, error, refreshing, refresh } = useLoad(getDashboard);
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-  const edit = () => router.navigate("/portfolio");
+  const edit = () => router.push("/portfolio");
 
   return (
     <Screen refreshing={refreshing} onRefresh={refresh}>
@@ -72,17 +69,6 @@ export default function Overview() {
   );
 }
 
-function Stat({ label, value, note, tone = "strong" }: { label: string; value: string; note?: string; tone?: Tone }) {
-  return (
-    <View style={styles.stat}>
-      <Label>{label}</Label>
-      <Txt num size={22} weight="medium" tone={tone} style={{ marginTop: 2 }} numberOfLines={1} adjustsFontSizeToFit>{value}</Txt>
-      {note ? <Txt size={12} tone="muted" style={{ marginTop: 2, lineHeight: 17 }}>{note}</Txt> : null}
-    </View>
-  );
-}
-
-const strong = (v: number | null | undefined): Tone => (toneOf(v) === "ink" ? "strong" : toneOf(v));
 
 function Tiles({ d }: { d: Dashboard }) {
   const t = d.totals;
@@ -91,7 +77,7 @@ function Tiles({ d }: { d: Dashboard }) {
   const theirs = index ? year?.indices[index.ticker] : null;
   const gap = year?.portfolio != null && theirs != null ? year.portfolio - theirs : null;
   return (
-    <Panel style={styles.tiles}>
+    <Panel style={statGrid}>
       <Stat label="Portfolio value" value={money(t.value)} note={t.positions ? `${t.positions} position${t.positions > 1 ? "s" : ""}` : "No positions"} />
       <Stat label="Today" value={signedMoney(t.day_change)} tone={strong(t.day_change)}
         note={`${signedPct(t.day_change_pct, 2)} · ${index?.name ?? "Index"} ${signedPct(d.benchmark.day_change_pct, 2)}`} />
@@ -235,8 +221,6 @@ function Makeup({ d }: { d: Dashboard }) {
 }
 
 const styles = StyleSheet.create({
-  tiles: { flexDirection: "row", flexWrap: "wrap", rowGap: space.lg, paddingRight: 0 },
-  stat: { width: "50%", paddingRight: space.lg },
   insight: { borderTopWidth: 1, borderTopColor: color.line, paddingTop: space.md },
   movers: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: space.md, rowGap: 4 },
   line: { paddingVertical: space.md, gap: 6 },
