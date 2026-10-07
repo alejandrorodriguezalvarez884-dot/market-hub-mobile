@@ -15,7 +15,8 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho (repo público en GitHub, submódulo de `market-hub`) |
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00023-q6q`) |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
-| 4 | Login con Google y con Apple; crear cuenta desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
+| 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho en la app y en el portal (2026-10-07). **Falta**: añadir la URI de vuelta en el cliente OAuth de Google, desplegar el portal y probarlo en el teléfono |
+| 4 | Login con Apple; crear cuenta con email desde la app; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador) |
 | 5 | Analysis, Watchlist y Community | Pendiente |
 | 6 | TestFlight y prueba cerrada de Google Play | Pendiente |
 
@@ -23,7 +24,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 - **Expo SDK 57**, React Native 0.86, React 19, `expo-router` (rutas en `src/app/`), TypeScript
   estricto. Sin carpetas `ios/` ni `android/`: las genera Expo al compilar.
-- **Pantallas**: `sign-in` (email y contraseña) y, ya dentro, tres pestañas (`src/app/(hub)/`):
+- **Pantallas**: `sign-in` ("Continue with Google" y, debajo, email y contraseña) y, ya dentro, tres pestañas (`src/app/(hub)/`):
   - **Overview** (`index.tsx`): lo que el dashboard de la web, puesto en una columna. Saludo, las
     cuatro cifras (valor, hoy, ganancia, un año frente al índice), "Your portfolio, read back" (las
     frases del código al momento y las del modelo cuando llegan, como en la web), lo que más se
@@ -74,14 +75,30 @@ Para trabajar contra el portal de este equipo en vez del público:
 
 ## Lo que hay que saber antes de seguir
 
-- **Quien entró en la web con Google no puede entrar aún en la app**: solo hay email y contraseña.
-  El login nativo de Google no funciona en Expo Go; llega en el paso 4 con una compilación de
-  desarrollo. En el portal, `/api/app/auth/google` no existe todavía: será como
-  `/api/auth/google` pero devolviendo token. El token de Google que da el login nativo lleva como
-  audiencia el cliente web si se configura con él (`webClientId`), así que la verificación del
-  servidor vale tal cual; hacen falta dos clientes OAuth más (iOS y Android).
-- **Crear cuenta** hoy se hace en la web (la pantalla de entrada enlaza a ella): el registro pasa
-  por el captcha de Cloudflare, que en la app irá en un WebView.
+- **Entrar con Google** (`src/lib/google.ts`, 2026-10-07) va por el navegador del teléfono, no
+  por el botón nativo de Google (ese no funciona en Expo Go y pide un cliente OAuth por
+  plataforma). La app crea un secreto, abre el navegador en
+  `/api/app/auth/google/start?redirect=<su dirección>&challenge=<SHA-256 del secreto>`
+  (`expo-web-browser`, `openAuthSessionAsync`), el portal lo manda a Google, comprueba lo que
+  vuelve y devuelve el navegador a la app con un código de dos minutos; la app cambia código y
+  secreto por su token (`/api/app/auth/google/finish`). Detalle y razones en
+  `market-hub-landing/src/markethub/appsignin.py`. Es la misma cuenta que en la web (la clave es
+  el `sub` de Google), y quien no tenía cuenta la estrena así.
+  - **La dirección de la app** es `markethub://auth` en una app instalada y, en Expo Go por
+    túnel, `exp://<azar>-<usuario de Expo>-8081.exp.direct/--/auth`. El portal solo devuelve el
+    código a las direcciones que tiene permitidas: la primera siempre; la segunda, porque está
+    en `MARKETHUB_APP_REDIRECTS` del `.env` del portal con el usuario de Expo del dueño.
+    **Con `make start LOCAL=1` o sin túnel (dirección `exp://192.168…`) Google no funciona**: esa
+    dirección no está permitida a propósito. **Antes de publicar en tiendas, vaciar
+    `MARKETHUB_APP_REDIRECTS` y desplegar.**
+  - `src/app/+native-intent.tsx` hace que el enlace de vuelta (`…/auth?code=…`) no se tome por
+    una pantalla (Android lo entrega como enlace a la app).
+  - En la vista de navegador (`make web`) el botón dice que Google es cosa de la app.
+  - **Sin probar en un teléfono**: todo el viaje por el navegador (hoja de Google en iPhone,
+    pestaña de Chrome en Android, la vuelta a la app). Lo probado son los tests del portal (20,
+    con Google simulado), que el botón sale y que los dos paquetes nativos compilan.
+- **Crear cuenta con email** hoy se hace en la web (la pantalla de entrada enlaza a ella): el
+  registro pasa por el captcha de Cloudflare, que en la app irá en un WebView.
 - **Apple** pedirá "Sign in with Apple" al ofrecer el de Google, y una dirección con la política
   de privacidad; la del portal tendrá que decir lo que guarda la app (hoy, nada nuevo en el
   servidor).

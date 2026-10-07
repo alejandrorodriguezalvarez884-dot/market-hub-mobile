@@ -3,6 +3,7 @@
 import { createContext, use, useCallback, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 
 import { api, onRefused, setToken } from "./api";
+import { askGoogle } from "./google";
 import { read, write } from "./storage";
 import type { User } from "./types";
 
@@ -15,6 +16,8 @@ type Session = {
   // True until the kept session, if there is one, has been read.
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  // False when the user closed Google's page without choosing an account.
+  signInWithGoogle: () => Promise<boolean>;
   signOut: () => Promise<void>;
 };
 
@@ -78,6 +81,14 @@ export function SessionProvider({ children }: PropsWithChildren) {
     await keep({ token: entered.token, user: entered.user });
   }, [keep]);
 
-  const value = useMemo(() => ({ user, loading, signIn, signOut }), [user, loading, signIn, signOut]);
+  const signInWithGoogle = useCallback(async () => {
+    const asked = await askGoogle();
+    if (!asked) return false;
+    const entered = await api<Entered>("/api/app/auth/google/finish", { method: "POST", body: asked });
+    await keep({ token: entered.token, user: entered.user });
+    return true;
+  }, [keep]);
+
+  const value = useMemo(() => ({ user, loading, signIn, signInWithGoogle, signOut }), [user, loading, signIn, signInWithGoogle, signOut]);
   return <Context value={value}>{children}</Context>;
 }

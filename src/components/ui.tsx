@@ -84,9 +84,11 @@ export function Panel({ children, style }: PropsWithChildren<{ style?: StyleProp
   return <View style={[styles.panel, style]}>{children}</View>;
 }
 
-type ButtonProps = { title: string; onPress: () => void; kind?: "primary" | "ghost" | "danger"; busy?: boolean; disabled?: boolean; style?: StyleProp<ViewStyle> };
+type ButtonProps = { title: string; onPress: () => void; kind?: "primary" | "ghost" | "danger"; busy?: boolean; disabled?: boolean;
+  // A mark drawn before the words (Google's, on its button).
+  mark?: ReactNode; style?: StyleProp<ViewStyle> };
 
-export function Button({ title, onPress, kind = "primary", busy = false, disabled = false, style }: ButtonProps) {
+export function Button({ title, onPress, kind = "primary", busy = false, disabled = false, mark, style }: ButtonProps) {
   const off = busy || disabled;
   const ink = kind === "ghost" ? "ink" : "page";
   return (
@@ -97,7 +99,12 @@ export function Button({ title, onPress, kind = "primary", busy = false, disable
       onPress={onPress}
       style={({ pressed }) => [styles.button, kind === "primary" && styles.primary, kind === "ghost" && styles.ghost,
         kind === "danger" && styles.danger, (pressed || off) && { opacity: 0.6 }, style]}>
-      {busy ? <ActivityIndicator size="small" color={TONES[ink]} /> : <Txt size={15} weight="medium" tone={ink}>{title}</Txt>}
+      {busy ? <ActivityIndicator size="small" color={TONES[ink]} /> : (
+        <>
+          {mark}
+          <Txt size={15} weight="medium" tone={ink}>{title}</Txt>
+        </>
+      )}
     </Pressable>
   );
 }
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
   section: { borderTopWidth: 1, borderTopColor: color.lineStrong, paddingTop: 14 },
   sectionHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", gap: space.lg },
   panel: { borderWidth: 1, borderColor: color.line, borderRadius: radius, padding: space.lg },
-  button: { minHeight: 44, alignItems: "center", justifyContent: "center", borderRadius: radius, paddingHorizontal: space.lg, paddingVertical: 10 },
+  button: { minHeight: 44, flexDirection: "row", gap: 10, alignItems: "center", justifyContent: "center", borderRadius: radius, paddingHorizontal: space.lg, paddingVertical: 10 },
   primary: { backgroundColor: color.inkStrong },
   ghost: { borderWidth: 1, borderColor: color.lineStrong },
   danger: { backgroundColor: color.down },

@@ -4,18 +4,19 @@ import { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, type TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Logo } from "@/components/marks";
+import { GoogleMark, Logo } from "@/components/marks";
 import { Button, Field, Label, Notice, Txt } from "@/components/ui";
 import { SITE, message } from "@/lib/api";
 import { useSession } from "@/lib/session";
 import { color, space } from "@/lib/theme";
 
 export default function SignIn() {
-  const { signIn } = useSession();
+  const { signIn, signInWithGoogle } = useSession();
   const insets = useSafeAreaInsets();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [google, setGoogle] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const second = useRef<TextInput>(null);
 
@@ -28,6 +29,18 @@ export default function SignIn() {
     } catch (e) {
       setError(message(e, "Signing in failed."));
       setBusy(false);
+    }
+  }
+
+  async function enterWithGoogle() {
+    setGoogle(true);
+    setError(null);
+    try {
+      // Signed in, this screen gives way to My Hub; closed without choosing, it stays as it was.
+      if (!(await signInWithGoogle())) setGoogle(false);
+    } catch (e) {
+      setError(message(e, "Signing in with Google failed."));
+      setGoogle(false);
     }
   }
 
@@ -45,6 +58,12 @@ export default function SignIn() {
         </View>
 
         <View style={{ gap: space.md }}>
+          <Button title="Continue with Google" kind="ghost" mark={<GoogleMark />} onPress={enterWithGoogle} busy={google} disabled={busy} />
+          <View style={styles.or}>
+            <View style={styles.rule} />
+            <Label>or with your email</Label>
+            <View style={styles.rule} />
+          </View>
           <View style={{ gap: 6 }}>
             <Label>Email</Label>
             <Field accessibilityLabel="Email" value={email} onChangeText={setEmail} keyboardType="email-address" textContentType="username"
@@ -56,13 +75,13 @@ export default function SignIn() {
               autoComplete="current-password" returnKeyType="go" onSubmitEditing={enter} />
           </View>
           {error ? <Notice text={error} /> : null}
-          <Button title="Sign in" onPress={enter} busy={busy} style={{ marginTop: space.xs }} />
+          <Button title="Sign in" onPress={enter} busy={busy} disabled={google} style={{ marginTop: space.xs }} />
         </View>
 
         <Txt size={13} tone="muted" style={{ lineHeight: 20 }}>
-          No account yet?{" "}
-          <Txt size={13} tone="strong" style={styles.link} accessibilityRole="link" onPress={() => openBrowserAsync(`${SITE}/signin/`)}>Make one on themarkethub.app</Txt>
-          {" "}and come back to sign in with its email and password.
+          No account yet? Continue with Google to make one, or{" "}
+          <Txt size={13} tone="strong" style={styles.link} accessibilityRole="link" onPress={() => openBrowserAsync(`${SITE}/signin/`)}>make one with an email on themarkethub.app</Txt>
+          {" "}and come back to sign in with it.
         </Txt>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -74,4 +93,6 @@ const styles = StyleSheet.create({
   page: { flexGrow: 1, paddingHorizontal: space.xl, gap: space.xxl, width: "100%", maxWidth: 480, alignSelf: "center" },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
   link: { textDecorationLine: "underline" },
+  or: { flexDirection: "row", alignItems: "center", gap: space.md, marginVertical: space.xs },
+  rule: { flex: 1, height: 1, backgroundColor: color.line },
 });
