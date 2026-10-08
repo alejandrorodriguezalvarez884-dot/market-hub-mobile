@@ -11,7 +11,7 @@ Paquete: `app.themarkethub.hub` (para siempre). Cuenta de Play: personal.
 
 | # | Qué | Quién | Estado |
 |---|---|---|---|
-| 1 | Abrir la cuenta de Google Play Console (25 USD, personal) y verificar identidad | Usuario | Pendiente |
+| 1 | Abrir la cuenta de Google Play Console (25 USD, personal) y verificar identidad. Pide un documento de identidad y una tarjeta al mismo nombre, y **un teléfono Android de verdad** con la app Play Console para verificar la cuenta | Usuario | Pendiente |
 | 2 | `npx eas-cli@latest login` y `npx eas-cli@latest init` en este repo (crea el proyecto en Expo y escribe su id en `app.json`; ese cambio se commitea) | Usuario | Pendiente |
 | 3 | `make apk`: una APK para instalar en un Android y ver la app fuera de Expo Go. De ahí salen las capturas | Usuario lanza, agente revisa | Pendiente |
 | 4 | Crear la app en Play Console ("Create app": nombre, inglés (EE. UU.) por defecto, App, Free) | Usuario | Pendiente |
@@ -189,9 +189,16 @@ intercambiar contenido?": **sí** (los comentarios de la competición, entre mie
 
 **Government apps**: No. **Health apps**: ninguna función de salud.
 
-**Financial features**: la app no presta, no guarda dinero, no opera y no asesora: de la lista
-que enseña el formulario, **ninguna** ("My app doesn't provide any financial features"). Leer
-la lista en pantalla antes de marcar, porque Google la cambia.
+**Financial features**: la app no presta, no guarda dinero, no opera y no asesora. La respuesta
+que mejor la describe es **ninguna** ("My app doesn't provide any financial features"), **pero
+no es seguro que Google lo lea así**: la lista del formulario tiene una casilla "Stock trading
+and portfolio management" que Google no define, y la app enseña la cartera que el usuario
+escribe. Importa por la cuenta: Google exige **cuenta de organización** (con número D-U-N-S) a
+quien ofrece "financial products and services, including but not limited to banking, loans,
+stock trading, investment funds", y la cuenta elegida es personal. Una app que solo enseña cifras
+no presta ninguno de esos servicios, pero si un revisor la toma por "portfolio management" puede
+rechazarla o pedir el cambio de cuenta. Se puede preguntar al soporte de Play Console una vez
+abierta la cuenta, antes de enviar la app. (Leído en la ayuda de Google el 2026-10-08.)
 
 **Permisos del APK**: `INTERNET`, `VIBRATE` y `SYSTEM_ALERT_WINDOW` (los dos últimos los trae
 la plantilla de React Native; la app no los usa). Los de almacenamiento están quitados en
