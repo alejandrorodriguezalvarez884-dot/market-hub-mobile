@@ -196,6 +196,13 @@ Para trabajar contra el portal de este equipo en vez del público:
     plantilla); los de almacenamiento se quitan con `android.blockedPermissions`.
   - **Sin hacer**: las capturas (del APK instalado), la cuenta de revisores, y vaciar
     `MARKETHUB_APP_REDIRECTS` antes de producción.
+  - **Los 12 testers se piden en el vídeo demo de My Hub** (2026-10-08,
+    `the-market-hub-media/videos/2026-10-08-my-hub-demo/`, que el usuario comparte a mano). A quien
+    se ofrece se le pide un mensaje con tres cosas: su nombre, si su teléfono es Android o iPhone,
+    y el email de la cuenta de Google de ese teléfono (la de Play Store), que es con lo que se le
+    invita a la prueba cerrada; en iPhone, el de su cuenta de Apple (TestFlight). Qué datos pedir
+    lo eligió el agente. Los emails que lleguen se apuntan en Play Console (lista de testers de la
+    prueba cerrada), no en el repo.
 - **Icono y pantalla de arranque** (2026-10-08): la marca del portal (la línea del cero y un
   movimiento a su derecha) en la tinta del portal sobre su fondo. Los dibuja
   `scripts/draw-icons.mjs` (`make icons`), sin dependencias: `icon.png` (1024, sin
