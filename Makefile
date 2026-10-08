@@ -5,10 +5,12 @@
 #   make api             the portal's API on this machine, for the app to talk to instead
 #   make start LOCAL=1   the app for Expo Go, talking to that local portal
 #   make start TUNNEL=1  the same app, reached through a tunnel instead of the local network
+#   make apk             the app as a file to install on an Android phone, built by EAS
+#   make aab             the bundle Google Play takes, built by EAS (uploading it is done by hand)
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: help install start web api demo icons check
+.PHONY: help install start web api demo icons apk aab check
 
 # The portal's repo, a sibling folder in the market-hub workspace.
 PORTAL ?= ../market-hub-landing
@@ -36,8 +38,18 @@ api: ## Run the portal's API on this machine, open to the local network, port 80
 demo: ## Make the demo account (see scripts/seed-local.sh) on the portal `make api` is running
 	./scripts/seed-local.sh http://localhost:8000
 
-icons: ## Draw the app's icon, its Android layers and the launch screen's mark again (scripts/draw-icons.mjs)
+icons: ## Draw the app's icon, its Android layers, the launch screen's mark and Google Play's pictures again (scripts/draw-icons.mjs)
 	node scripts/draw-icons.mjs
+
+# EAS builds in Expo's cloud, with the Expo account of whoever is logged in (`npx eas-cli@latest
+# login`, and `npx eas-cli@latest init` once). Each build is asked for here, by hand.
+EAS := npx eas-cli@latest
+
+apk: ## Build an APK with EAS, to install on an Android phone without Expo Go
+	$(EAS) build --platform android --profile preview
+
+aab: ## Build the bundle Google Play takes, with EAS. Publishing it is the owner's decision, version by version
+	$(EAS) build --platform android --profile production
 
 check: ## Type check, lint and Expo's own checks of the project
 	npx tsc --noEmit
