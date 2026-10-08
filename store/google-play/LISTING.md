@@ -139,7 +139,7 @@ Market Hub cubre empresas cotizadas en Estados Unidos. La app está en inglés. 
 | Categoría | Finance | |
 | Email de contacto (se ve en la ficha) | El que elija el usuario | **Pendiente** |
 | Web | `https://themarkethub.app` | |
-| Política de privacidad | `https://themarkethub.app/privacy/` | Dice lo de la app desde el 2026-10-08 (falta desplegarlo) |
+| Política de privacidad | `https://themarkethub.app/privacy/` | Dice lo de la app desde el 2026-10-08 (desplegado) |
 | Precio y países | Gratis; los países los elige el usuario | **Pendiente** |
 
 ## 4. App content (los formularios)

@@ -22,7 +22,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 4d | Login con Apple; compilación de desarrollo con EAS | Pendiente (pide la cuenta de Apple; el usuario aún no la tiene, 2026-10-08) |
 | 5 | Analysis, Watchlist y Community | Hecho (2026-10-07) y probado en la vista de navegador; **falta verlo en un teléfono** |
 | 5b | Lo que la web tenía y la app no: noticias en Overview, volumen en la ficha, lo guardado y cambiar contraseña en Account | Hecho (2026-10-08) y probado en la vista de navegador |
-| 6a | Google Play: ficha, gráficos, formularios y privacidad | Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción), las capturas y desplegar la página de privacidad del portal |
+| 6a | Google Play: ficha, gráficos, formularios y privacidad | Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. La página de privacidad del portal ya lo dice, desplegada. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción) y las capturas |
 | 6b | TestFlight | Pendiente |
 
 ## Dónde estamos
@@ -174,8 +174,7 @@ Para trabajar contra el portal de este equipo en vez del público:
   Las dos rutas están en producción desde el 2026-10-08 (comprobado: la página del captcha
   responde con el widget, y un registro sin captcha da 400 con el mensaje del portal).
 - **Apple** pedirá "Sign in with Apple" al ofrecer el de Google, y una dirección con la política
-  de privacidad. La del portal dice lo de la app desde el 2026-10-08 (commiteado; ver si ya está
-  desplegado en el HANDOFF del portal).
+  de privacidad. La del portal dice lo de la app desde el 2026-10-08 (desplegado).
 - **Identificadores de la app**: `app.themarkethub.hub` en `ios.bundleIdentifier` y en
   `android.package`, elegido por el usuario (2026-10-08). Son para siempre una vez publicada.
 - **Google Play** (2026-10-08; el usuario quiere ir publicando ahí primero, con cuenta personal).
