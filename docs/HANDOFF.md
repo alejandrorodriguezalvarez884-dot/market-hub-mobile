@@ -18,10 +18,12 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00025-gj8`; la URI de vuelta ya está en el cliente OAuth). **Falta** que el usuario lo pruebe en el teléfono |
 | 4a | Crear cuenta con email desde la app, con el captcha en un WebView | Hecho (2026-10-08), probado en la vista de navegador sin captcha, y el portal **desplegado** (revisión `market-hub-00027-wcg`). **Falta probar el captcha en un teléfono** |
 | 4b | Icono y pantalla de arranque de Market Hub | Hecho (2026-10-08); se ven en una compilación, no en Expo Go |
-| 4c | Login con Apple; identificadores; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador; el usuario aún no tiene ninguna, 2026-10-08) |
+| 4c | Identificadores y configuración de EAS | Hecho (2026-10-08): `app.themarkethub.hub` en las dos plataformas, `eas.json`, `make apk` y `make aab`. **Falta** que el usuario haga `eas login` y `eas init` |
+| 4d | Login con Apple; compilación de desarrollo con EAS | Pendiente (pide la cuenta de Apple; el usuario aún no la tiene, 2026-10-08) |
 | 5 | Analysis, Watchlist y Community | Hecho (2026-10-07) y probado en la vista de navegador; **falta verlo en un teléfono** |
 | 5b | Lo que la web tenía y la app no: noticias en Overview, volumen en la ficha, lo guardado y cambiar contraseña en Account | Hecho (2026-10-08) y probado en la vista de navegador |
-| 6 | TestFlight y prueba cerrada de Google Play | Pendiente |
+| 6a | Google Play: ficha, gráficos, formularios y privacidad | Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción), las capturas y desplegar la página de privacidad del portal |
+| 6b | TestFlight | Pendiente |
 
 ## Dónde estamos
 
@@ -172,10 +174,27 @@ Para trabajar contra el portal de este equipo en vez del público:
   Las dos rutas están en producción desde el 2026-10-08 (comprobado: la página del captcha
   responde con el widget, y un registro sin captcha da 400 con el mensaje del portal).
 - **Apple** pedirá "Sign in with Apple" al ofrecer el de Google, y una dirección con la política
-  de privacidad; la del portal tendrá que decir lo que guarda la app (hoy, nada nuevo en el
-  servidor).
-- **Identificadores de la app** (`ios.bundleIdentifier`, `android.package`): sin poner. Son para
-  siempre una vez publicada: los elige el usuario en el paso 4.
+  de privacidad. La del portal dice lo de la app desde el 2026-10-08 (commiteado; ver si ya está
+  desplegado en el HANDOFF del portal).
+- **Identificadores de la app**: `app.themarkethub.hub` en `ios.bundleIdentifier` y en
+  `android.package`, elegido por el usuario (2026-10-08). Son para siempre una vez publicada.
+- **Google Play** (2026-10-08; el usuario quiere ir publicando ahí primero, con cuenta personal).
+  Todo lo que Play Console pide está en `store/google-play/LISTING.md`: los pasos en orden, los
+  textos de la ficha en inglés y en español (dentro de los límites de Play), y las respuestas a
+  los formularios (acceso, anuncios, clasificación, público, Data safety, funciones
+  financieras), escritas de lo que la app hace hoy. Los gráficos (icono de 512 y feature graphic
+  de 1024 × 500, este sin alfa) los dibuja `make icons`.
+  - **EAS** (`eas.json`): `preview` da una APK para instalar a mano (`make apk`), `production` el
+    `.aab` de Play (`make aab`) con el número de versión llevado por EAS (`appVersionSource:
+    remote`, `autoIncrement`). En este equipo no hay Android SDK ni Java: se compila en la nube
+    de Expo, con la cuenta de Expo del usuario. `eas-cli` no tiene sesión: **el usuario hace
+    `npx eas-cli@latest login` y `npx eas-cli@latest init`** (este escribe `extra.eas.projectId`
+    en `app.json`, que se commitea). No se ha lanzado ninguna compilación.
+  - **Permisos**: generado el proyecto de Android una vez (`expo prebuild`, borrado después): el
+    manifiesto lleva `INTERNET`, `VIBRATE` y `SYSTEM_ALERT_WINDOW` (los dos últimos, de la
+    plantilla); los de almacenamiento se quitan con `android.blockedPermissions`.
+  - **Sin hacer**: las capturas (del APK instalado), la cuenta de revisores, y vaciar
+    `MARKETHUB_APP_REDIRECTS` antes de producción.
 - **Icono y pantalla de arranque** (2026-10-08): la marca del portal (la línea del cero y un
   movimiento a su derecha) en la tinta del portal sobre su fondo. Los dibuja
   `scripts/draw-icons.mjs` (`make icons`), sin dependencias: `icon.png` (1024, sin
