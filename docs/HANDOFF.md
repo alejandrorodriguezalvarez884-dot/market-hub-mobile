@@ -16,7 +16,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00023-q6q`) |
 | 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
 | 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00025-gj8`; la URI de vuelta ya está en el cliente OAuth). **Falta** que el usuario lo pruebe en el teléfono |
-| 4a | Crear cuenta con email desde la app, con el captcha en un WebView | Hecho (2026-10-08) y probado en la vista de navegador sin captcha. **Falta desplegar el portal** (rutas nuevas) y **probar el captcha en un teléfono** |
+| 4a | Crear cuenta con email desde la app, con el captcha en un WebView | Hecho (2026-10-08), probado en la vista de navegador sin captcha, y el portal **desplegado** (revisión `market-hub-00027-wcg`). **Falta probar el captcha en un teléfono** |
 | 4b | Icono y pantalla de arranque de Market Hub | Hecho (2026-10-08); se ven en una compilación, no en Expo Go |
 | 4c | Login con Apple; identificadores; compilación de desarrollo con EAS | Pendiente (pide las cuentas de desarrollador; el usuario aún no tiene ninguna, 2026-10-08) |
 | 5 | Analysis, Watchlist y Community | Hecho (2026-10-07) y probado en la vista de navegador; **falta verlo en un teléfono** |
@@ -169,8 +169,8 @@ Para trabajar contra el portal de este equipo en vez del público:
   **`POST /api/app/auth/register`**, que hace las mismas comprobaciones que el registro de la web
   y devuelve un token en vez de poner cookie. El token del captcha vale una vez: tras un rechazo
   la app vuelve a dibujar el widget. Un enlace tocado dentro del widget se abre en el navegador.
-  **Las dos rutas son nuevas en el portal: hasta que se despliegue, "Create my account" contra
-  themarkethub.app responde 404.**
+  Las dos rutas están en producción desde el 2026-10-08 (comprobado: la página del captcha
+  responde con el widget, y un registro sin captcha da 400 con el mensaje del portal).
 - **Apple** pedirá "Sign in with Apple" al ofrecer el de Google, y una dirección con la política
   de privacidad; la del portal tendrá que decir lo que guarda la app (hoy, nada nuevo en el
   servidor).
