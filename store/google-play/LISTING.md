@@ -7,6 +7,9 @@ subir esa versión.**
 
 Paquete: `app.themarkethub.hub` (para siempre). Cuenta de Play: personal.
 
+**En espera desde el 2026-10-08**, por decisión del usuario: no tiene teléfono Android, y hace
+falta para el paso 1 (verificar la cuenta) y el 3 (instalar el APK y sacar las capturas).
+
 ## 1. Pasos, en orden
 
 | # | Qué | Quién | Estado |
