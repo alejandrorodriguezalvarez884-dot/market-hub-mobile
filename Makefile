@@ -8,7 +8,7 @@
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: help install start web api demo check
+.PHONY: help install start web api demo icons check
 
 # The portal's repo, a sibling folder in the market-hub workspace.
 PORTAL ?= ../market-hub-landing
@@ -35,6 +35,9 @@ api: ## Run the portal's API on this machine, open to the local network, port 80
 
 demo: ## Make the demo account (see scripts/seed-local.sh) on the portal `make api` is running
 	./scripts/seed-local.sh http://localhost:8000
+
+icons: ## Draw the app's icon, its Android layers and the launch screen's mark again (scripts/draw-icons.mjs)
+	node scripts/draw-icons.mjs
 
 check: ## Type check, lint and Expo's own checks of the project
 	npx tsc --noEmit
