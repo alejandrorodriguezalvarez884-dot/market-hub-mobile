@@ -1,4 +1,5 @@
-// One stock's daily bars, as candles or as a line, with its 20, 50 and 200-day averages.
+// One stock's daily bars, as candles or as a line, with its 20, 50 and 200-day averages, and
+// under them how much was traded each session.
 import { useState } from "react";
 import { View } from "react-native";
 import Svg, { Line, Path } from "react-native-svg";
@@ -10,6 +11,8 @@ import { AVERAGES, RANGES, average, type Bars, type Range } from "@/lib/watch";
 
 const HEIGHT = 240;
 const SCALE = 58; // room for the prices, to the right of the bars
+// The volume takes the foot of the chart, and the prices stay clear of it, as on the site.
+const VOLUME = { height: 0.14, clear: 0.2, tint: "rgba(242, 240, 234, 0.13)" };
 
 export function PriceChart({ bars, range, candles, averages }: { bars: Bars; range: Range; candles: boolean; averages: boolean }) {
   const [width, setWidth] = useState(0);
@@ -37,7 +40,10 @@ export function PriceChart({ bars, range, candles, averages }: { bars: Bars; ran
   const plot = Math.max(0, width - SCALE);
   const step = plot / count;
   const x = (i: number) => (i - from + 0.5) * step;
-  const y = (v: number) => 4 + ((hi + pad - v) / (hi - lo + 2 * pad)) * (HEIGHT - 8);
+  let most = 0;
+  for (let i = from; i < bars.time.length; i++) most = Math.max(most, bars.volume[i] ?? 0);
+  const floor = most > 0 ? HEIGHT * (1 - VOLUME.clear) : HEIGHT - 4;
+  const y = (v: number) => 4 + ((hi + pad - v) / (hi - lo + 2 * pad)) * (floor - 4);
   const f = (v: number) => v.toFixed(1);
 
   const rising = bars.close[bars.close.length - 1] >= bars.close[from];
@@ -71,6 +77,14 @@ export function PriceChart({ bars, range, candles, averages }: { bars: Bars; ran
     }
     paths.push({ d, tint: l.color, wide: 1 });
   }
+  let traded = "";
+  if (most > 0) {
+    const wide = Math.max(1, Math.min(9, step * 0.7));
+    for (let i = from; i < bars.time.length; i++) {
+      const tall = ((bars.volume[i] ?? 0) / most) * HEIGHT * VOLUME.height;
+      if (tall > 0) traded += `M${f(x(i) - wide / 2)},${HEIGHT}v${f(-tall)}h${f(wide)}V${HEIGHT}Z`;
+    }
+  }
   const last = bars.close[bars.close.length - 1];
   const marks = [hi, (hi + lo) / 2, lo];
 
@@ -82,6 +96,7 @@ export function PriceChart({ bars, range, candles, averages }: { bars: Bars; ran
           <>
             <Svg width={width} height={HEIGHT}>
               {marks.map((v) => <Line key={v} x1={0} x2={plot} y1={y(v)} y2={y(v)} stroke={color.line} strokeWidth={1} strokeDasharray="2 4" />)}
+              {traded ? <Path d={traded} fill={VOLUME.tint} /> : null}
               {paths.filter((p) => p.d).map((p, i) => (
                 <Path key={i} d={p.d} stroke={p.tint} strokeWidth={p.wide} fill={p.fill ? p.tint : "none"} strokeLinejoin="round" />
               ))}
@@ -98,7 +113,7 @@ export function PriceChart({ bars, range, candles, averages }: { bars: Bars; ran
         <Txt num size={10.5} tone="muted">{shortDate(bars.time[from])}</Txt>
         <Txt num size={10.5} tone="muted">{shortDate(bars.time[bars.time.length - 1])}</Txt>
       </View>
-      {lines.length ? (
+      {lines.length || traded ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 14, marginTop: 8 }}>
           {lines.map((l) => (
             <View key={l.sessions} style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
@@ -106,6 +121,12 @@ export function PriceChart({ bars, range, candles, averages }: { bars: Bars; ran
               <Txt size={12} tone="muted">{l.name}</Txt>
             </View>
           ))}
+          {traded ? (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+              <View style={{ width: 6, height: 9, backgroundColor: VOLUME.tint }} />
+              <Txt size={12} tone="muted">Volume</Txt>
+            </View>
+          ) : null}
         </View>
       ) : null}
     </View>

@@ -51,6 +51,17 @@ export type Board = {
 };
 export type Sharing = { enabled: boolean; handle: string; since_utc: string | null };
 
+// What /api/news/mine returns (the site's lib/market.ts): the news desk's items about the user's stocks.
+export type NewsItem = {
+  id: string; category: string; title: string; summary: string; tickers: string[]; source: string; published_utc: string;
+  url?: string; // the document or the article
+  layer?: "official" | "market" | "press";
+  sentiment?: "bullish" | "bearish" | "neutral" | null; // how the news reads; null when nobody has said
+  scope?: string | null; // the sector it touches, or "Macro"
+};
+export type News = { sample: boolean; items: NewsItem[]; refreshed_utc: string | null;
+  stale: boolean }; // older than the desk allows: whoever shows it asks for a refresh
+
 // `provider` says how the account signs in: with Google, or with a password kept by the portal.
 export type User = { id: string; email: string; name: string; picture: string; provider?: "google" | "password" };
 export type Position = { ticker: string; shares: number; avg_cost: number | null };

@@ -32,6 +32,21 @@ export function GoogleMark({ size = 18 }: { size?: number }) {
   );
 }
 
+// How a news item reads, drawn with the portal's own mark (the site's lib/news.ts): right of the
+// line is bullish, left of it is bearish, on it is neutral.
+export function ToneMark({ sentiment }: { sentiment: "bullish" | "bearish" | "neutral" }) {
+  const side = sentiment === "bullish" ? 1 : sentiment === "bearish" ? -1 : 0;
+  const tint = side > 0 ? color.up : side < 0 ? color.down : color.muted;
+  return (
+    <View aria-hidden>
+      <Svg width={22} height={12} viewBox="0 0 22 12" fill="none">
+        <Path d={`M11 1v10${side ? `M11 6h${side * 6}` : ""}`} stroke={tint} strokeWidth={1.8} strokeLinecap="round" />
+        <Circle cx={11 + side * 7.5} cy={6} r={2.6} fill={tint} />
+      </Svg>
+    </View>
+  );
+}
+
 // The marks of the site's own menu (market-hub-landing/site/src/components/App.astro), and a few more.
 const ICONS = {
   overview: "M3 13h6V3H3v10Zm0 8h6v-6H3v6Zm8 0h10V11H11v10Zm0-18v6h10V3H11Z",

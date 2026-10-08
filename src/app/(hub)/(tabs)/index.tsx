@@ -5,15 +5,15 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { CompareChart } from "@/components/compare-chart";
-import { ShareBar, Sparkline, StackedBar } from "@/components/marks";
+import { ShareBar, Sparkline, StackedBar, ToneMark } from "@/components/marks";
 import { Button, Head, Label, Notice, Panel, Rule, Screen, Section, Stat, Txt, Waiting, statGrid, strong } from "@/components/ui";
 import { api } from "@/lib/api";
-import { money, pct, price, signedMoney, signedPct, tidyName, toneOf } from "@/lib/format";
-import { getDashboard, openQuote } from "@/lib/hub";
+import { money, pct, price, signedMoney, signedPct, tidyName, timeAgo, toneOf } from "@/lib/format";
+import { getDashboard, newsAddress, openPage, openQuote, watchMyNews } from "@/lib/hub";
 import { useLoad } from "@/lib/load";
 import { useSession } from "@/lib/session";
 import { color, space } from "@/lib/theme";
-import type { Dashboard, Group, Insights, Row, Watch } from "@/lib/types";
+import type { Dashboard, Group, Insights, NewsItem, Row, Watch } from "@/lib/types";
 
 
 function greeting(name: string) {
@@ -62,6 +62,7 @@ export default function Overview() {
               {d.watchlist.map((w, i) => <Followed key={w.ticker} w={w} first={i === 0} />)}
             </Section>
           ) : null}
+          <OwnNews of={d} />
           {d.notes.map((n) => <Txt key={n} size={12} tone="warn">{n}</Txt>)}
         </>
       )}
@@ -187,6 +188,46 @@ function Followed({ w, first }: { w: Watch; first: boolean }) {
   );
 }
 
+const READS = { bullish: "Bullish", bearish: "Bearish", neutral: "Neutral" } as const;
+
+// What the user's companies filed lately. The section stays out of the screen until there is something.
+function OwnNews({ of }: { of: Dashboard }) {
+  const [items, setItems] = useState<NewsItem[]>([]);
+  // Asked for again with the figures: when the screen comes to the front, or is pulled down.
+  useEffect(() => {
+    let alive = true;
+    watchMyNews((n) => alive && setItems(n.sample ? [] : n.items.slice(0, 8))).catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [of]);
+  if (!items.length) return null;
+  return (
+    <Section title="News on your stocks" note="From the filings of the companies you hold or follow">
+      {items.map((n, i) => {
+        const address = newsAddress(n);
+        return (
+          <Pressable key={n.id} disabled={!address} onPress={() => address && openPage(address)} accessibilityRole="link" accessibilityHint="Opens in the browser"
+            style={({ pressed }) => [styles.line, i > 0 && styles.lineRule, pressed && { backgroundColor: color.raised }]}>
+            <View style={styles.byline}>
+              <Txt num size={12} tone="muted">{timeAgo(n.published_utc)}</Txt>
+              <Txt size={12.5} tone="muted">{n.source}</Txt>
+              {n.sentiment && READS[n.sentiment] ? (
+                <View style={styles.reads}>
+                  <ToneMark sentiment={n.sentiment} />
+                  <Txt size={12.5} weight="medium" tone={n.sentiment === "bullish" ? "up" : n.sentiment === "bearish" ? "down" : "muted"}>{READS[n.sentiment]}</Txt>
+                </View>
+              ) : null}
+              {n.tickers.slice(0, 3).map((t) => <Txt key={t} num size={11.5} tone="muted">{t}</Txt>)}
+            </View>
+            <Txt size={14.5} tone="strong" style={{ lineHeight: 20 }}>{n.title}</Txt>
+          </Pressable>
+        );
+      })}
+    </Section>
+  );
+}
+
 function GroupLine({ title, items }: { title: string; items: Group[] }) {
   return (
     <View style={{ gap: 6 }}>
@@ -228,6 +269,8 @@ const styles = StyleSheet.create({
   lineTop: { flexDirection: "row", alignItems: "center", gap: space.md },
   lineSub: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", columnGap: space.md, rowGap: 2 },
   figures: { alignItems: "flex-end", minWidth: 78 },
+  byline: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", columnGap: 10, rowGap: 2 },
+  reads: { flexDirection: "row", alignItems: "center", gap: 5 },
   makeupHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", gap: space.md },
   share: { flexDirection: "row", alignItems: "center", gap: space.md },
 });

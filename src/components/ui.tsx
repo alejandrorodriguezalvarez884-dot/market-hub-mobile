@@ -37,6 +37,7 @@ export function Screen({ children, refreshing = false, onRefresh, footer, headed
         style={styles.fill}
         contentContainerStyle={[styles.screen, { paddingTop: headed ? space.lg : insets.top + space.lg }]}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
         refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={color.muted} /> : undefined}>
         {children}
       </ScrollView>

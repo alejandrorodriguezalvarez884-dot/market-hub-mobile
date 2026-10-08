@@ -21,7 +21,10 @@ export const setToken = (value: string | null) => void (token = value);
 // What to do when the portal no longer takes the token (it ran out): the session signs out.
 export const onRefused = (then: (() => void) | null) => void (refused = then);
 
-type Init = { method?: "GET" | "POST" | "PUT" | "DELETE"; body?: unknown };
+type Init = { method?: "GET" | "POST" | "PUT" | "DELETE"; body?: unknown;
+  // For a request whose 401 is about what was sent (a wrong current password), not about the
+  // token: the session stays whatever the answer.
+  stays?: boolean };
 
 export async function api<T>(path: string, init: Init = {}): Promise<T> {
   const sent = token;
@@ -37,7 +40,7 @@ export async function api<T>(path: string, init: Init = {}): Promise<T> {
   }
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
-    if (res.status === 401 && sent && sent === token) refused?.();
+    if (res.status === 401 && sent && sent === token && !init.stays) refused?.();
     throw new ApiError(res.status, typeof body?.detail === "string" ? body.detail : `Request failed (${res.status}).`);
   }
   return body as T;
