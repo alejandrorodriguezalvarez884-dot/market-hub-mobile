@@ -1,5 +1,6 @@
-// Who is signed in. The portal checks the password and hands back a token; the app keeps it in
-// the phone's keychain, sends it with every request and asks for a fresh one each time it opens.
+// Who is signed in. The portal checks the password, or makes the account, and hands back a token;
+// the app keeps it in the phone's keychain, sends it with every request and asks for a fresh one
+// each time it opens.
 import { createContext, use, useCallback, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 
 import { api, onRefused, setToken } from "./api";
@@ -16,6 +17,9 @@ type Session = {
   // True until the kept session, if there is one, has been read.
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  // Makes an account with an email and a password. `captcha` is the token of the check that a
+  // person is asking, where the portal asks for one.
+  register: (name: string, email: string, password: string, captcha: string) => Promise<void>;
   // False when the user closed Google's page without choosing an account.
   signInWithGoogle: () => Promise<boolean>;
   signOut: () => Promise<void>;
@@ -81,6 +85,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
     await keep({ token: entered.token, user: entered.user });
   }, [keep]);
 
+  const register = useCallback(async (name: string, email: string, password: string, captcha: string) => {
+    const entered = await api<Entered>("/api/app/auth/register", { method: "POST", body: { name: name.trim(), email: email.trim(), password, captcha } });
+    await keep({ token: entered.token, user: entered.user });
+  }, [keep]);
+
   const signInWithGoogle = useCallback(async () => {
     const asked = await askGoogle();
     if (!asked) return false;
@@ -89,6 +98,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
     return true;
   }, [keep]);
 
-  const value = useMemo(() => ({ user, loading, signIn, signInWithGoogle, signOut }), [user, loading, signIn, signInWithGoogle, signOut]);
+  const value = useMemo(() => ({ user, loading, signIn, register, signInWithGoogle, signOut }), [user, loading, signIn, register, signInWithGoogle, signOut]);
   return <Context value={value}>{children}</Context>;
 }
