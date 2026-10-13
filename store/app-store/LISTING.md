@@ -18,7 +18,7 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 | 2 | `npx eas-cli@latest init` en este repo (crea el proyecto en Expo y escribe su id en `app.json`) | Agente | Hecho (2026-10-13) |
 | 3 | Publicar un contacto en el portal (apartado 6, regla 1.2, y la Support URL) | Usuario dice cuál, agente lo pone | **Pendiente, bloquea el envío** |
 | 4 | Desplegar el portal con las rutas de "Sign in with Apple" y con denunciar y bloquear (`make deploy` en `market-hub-landing`) | Agente, con permiso | Hecho (2026-10-13, revisión `market-hub-00035-w65`) |
-| 5 | Primera compilación de iPhone con EAS (`make ipa`) y subida a TestFlight (`make testflight`). EAS pide entrar con la cuenta de Apple en la terminal y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador. Puede que la app tenga que existir antes en App Store Connect (paso 8) | Usuario, en su terminal | **Hecho** (2026-10-13): versión 1.0.0, build 1, subida a App Store Connect (app `6822290220`). EAS creó la app allí con el nombre de `app.json`, "Market Hub", que estaba cogido: quedó como **"Market Hub (0f4413)"** y hay que cambiarlo en App Store Connect por el de la ficha (apartado 2). La clave de la API de App Store Connect la generó EAS con rol ADMIN y la guarda en sus servidores; basta APP_MANAGER, y se cambia en Users and Access > Integrations. Grupo de TestFlight "Team (Expo)" |
+| 5 | Primera compilación de iPhone con EAS (`make ipa`) y subida a TestFlight (`make testflight`). EAS pide entrar con la cuenta de Apple en la terminal y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador. Puede que la app tenga que existir antes en App Store Connect (paso 8) | Usuario, en su terminal | **Hecho** (2026-10-13): versión 1.0.0, build 1, subida a App Store Connect (app `6822290220`). EAS creó la app allí con el nombre de `app.json`, "Market Hub", que estaba cogido: quedó como "Market Hub (0f4413)" y el usuario lo cambió ese día en App Store Connect por **"The Market Hub"**, con categoría Finance (apartado 2). La clave de la API de App Store Connect la generó EAS con rol ADMIN y la guarda en sus servidores; basta APP_MANAGER, y se cambia en Users and Access > Integrations. Grupo de TestFlight "Team (Expo)" |
 | 6 | Probar en el iPhone, desde TestFlight: "Sign in with Apple" (no se puede probar antes: Expo Go no lleva el módulo), Google, el captcha al crear cuenta, el teclado, el icono y el arranque | Usuario | Pendiente |
 | 7 | Clave de "Sign in with Apple" (.p8) y revocar el token al borrar la cuenta (apartado 6) | Usuario crea la clave, agente escribe el código | Pendiente |
 | 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Usuario | Pendiente |
@@ -30,16 +30,17 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 
 ### English (U.S.), el idioma principal
 
-**Name** (30 como mucho)
+**Name** (30 como mucho). Elegido por el usuario y guardado en App Store Connect el 2026-10-13
+("Market Hub" a secas estaba cogido).
 
 ```
-Market Hub: Portfolio Tracker
+The Market Hub
 ```
 
-**Subtitle** (30 como mucho)
+**Subtitle** (30 como mucho). También elegido por el usuario y guardado ese día.
 
 ```
-Your stocks, described
+AI-based portfolio tracker
 ```
 
 **Promotional text** (170 como mucho; se puede cambiar sin enviar versión)
