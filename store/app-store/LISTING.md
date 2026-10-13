@@ -14,11 +14,11 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 
 | # | Qué | Quién | Estado |
 |---|---|---|---|
-| 1 | Apuntarse al Apple Developer Program (99 USD al año, como persona). Apple tarda en aprobarlo | Usuario | Pendiente |
-| 2 | `npx eas-cli@latest init` en este repo (crea el proyecto en Expo y escribe su id en `app.json`; ese cambio se commitea). En este Mac `eas-cli` ya tiene sesión | Usuario lo aprueba, agente lo lanza | Pendiente |
+| 1 | Apuntarse al Apple Developer Program (99 € al año, como persona) | Usuario | Inscrito y pagado el 2026-10-13; **falta que Apple la active** (hasta 48 horas; mientras, la página de la cuenta sigue diciendo "Purchase your membership": no hay que volver a comprar) |
+| 2 | `npx eas-cli@latest init` en este repo (crea el proyecto en Expo y escribe su id en `app.json`) | Agente | Hecho (2026-10-13) |
 | 3 | Publicar un contacto en el portal (apartado 6, regla 1.2, y la Support URL) | Usuario dice cuál, agente lo pone | **Pendiente, bloquea el envío** |
 | 4 | Desplegar el portal con las rutas de "Sign in with Apple" y con denunciar y bloquear (`make deploy` en `market-hub-landing`) | Agente, con permiso | Hecho (2026-10-13, revisión `market-hub-00035-w65`) |
-| 5 | Primera compilación de iPhone con EAS y subida a TestFlight. EAS pide entrar con la cuenta de Apple y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador | Usuario entra, agente lanza | Pendiente |
+| 5 | Primera compilación de iPhone con EAS (`make ipa`) y subida a TestFlight (`make testflight`). EAS pide entrar con la cuenta de Apple en la terminal y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador. Puede que la app tenga que existir antes en App Store Connect (paso 8) | Usuario, en su terminal | Pendiente de que Apple active la cuenta |
 | 6 | Probar en el iPhone, desde TestFlight: "Sign in with Apple" (no se puede probar antes: Expo Go no lleva el módulo), Google, el captcha al crear cuenta, el teclado, el icono y el arranque | Usuario | Pendiente |
 | 7 | Clave de "Sign in with Apple" (.p8) y revocar el token al borrar la cuenta (apartado 6) | Usuario crea la clave, agente escribe el código | Pendiente |
 | 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Usuario | Pendiente |

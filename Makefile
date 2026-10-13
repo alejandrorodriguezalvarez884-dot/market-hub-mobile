@@ -7,10 +7,12 @@
 #   make start TUNNEL=1  the same app, reached through a tunnel instead of the local network
 #   make apk             the app as a file to install on an Android phone, built by EAS
 #   make aab             the bundle Google Play takes, built by EAS (uploading it is done by hand)
+#   make ipa             the app for iPhone, built by EAS, for TestFlight and the App Store
+#   make testflight      send the latest iPhone build to App Store Connect, where TestFlight takes it
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: help install start web api demo icons apk aab check
+.PHONY: help install start web api demo icons apk aab ipa testflight check
 
 # The portal's repo, a sibling folder in the market-hub workspace.
 PORTAL ?= ../market-hub-landing
@@ -50,6 +52,14 @@ apk: ## Build an APK with EAS, to install on an Android phone without Expo Go
 
 aab: ## Build the bundle Google Play takes, with EAS. Publishing it is the owner's decision, version by version
 	$(EAS) build --platform android --profile production
+
+# Both ask for the Apple account of whoever runs them, in the terminal: EAS makes the signing
+# certificate and the profile there, and never from this repo.
+ipa: ## Build the app for iPhone with EAS, signed for TestFlight and the App Store
+	$(EAS) build --platform ios --profile production
+
+testflight: ## Send the latest iPhone build to App Store Connect, for TestFlight. Sending a version to review is the owner's decision
+	$(EAS) submit --platform ios --latest
 
 check: ## Type check, lint and Expo's own checks of the project
 	npx tsc --noEmit
