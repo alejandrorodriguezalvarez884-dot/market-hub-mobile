@@ -206,6 +206,8 @@ Market Hub is the phone version of the private area of https://themarkethub.app.
 
 Sign in with the demo account above (email and password), or with Sign in with Apple or Google. The demo account already has a small portfolio and a watchlist.
 
+The analysis tools under More (Fundamentals Lab, Earnings Radar, Peer Map, Playground) are our own web tools, shown inside the app and signed in with the same account; everything else in the app is native.
+
 Account deletion: More > Account and data > Delete my account. It deletes the account and everything kept about it at once.
 
 Members can write comments in Community > Monthly competition > Discussion. Under every comment that is not your own there is "Report" and "Block". A reported comment is hidden from whoever reported it at once, and from everybody once two members have reported it, until we review it; we remove comments that break the rules. Blocking a member hides everything they write from you; More > Account and data lists who you blocked, with "Unblock". Comments with slurs or abusive language are not accepted. Contact: https://themarkethub.app/contact/ (alejandrorodriguezalvarez884@gmail.com), also linked in the app under More > Help.

@@ -64,8 +64,12 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
       responder, borrar), el formulario de la apuesta (pesos con − / + y campo, porque React
       Native no trae un deslizador), el historial y las reglas.
   - **More** (`more.tsx`): lo que no tiene pestaña. Portfolio y Account and data (pantallas de la
-    app), Fundamentals Lab y Earnings Radar, y las secciones públicas (Markets, News, Opinion,
-    Media), que se abren en el navegador.
+    app), las cuatro herramientas (Fundamentals Lab, Earnings Radar, Peer Map y Playground), que
+    se abren **dentro de la app**, las secciones públicas (Markets, News, Opinion, Media) y Help
+    (Contact, Terms), que se abren en el navegador.
+  - **Una herramienta** (`tool/[key].tsx`, 2026-10-13): la web de la herramienta en una página de
+    la app (`react-native-webview`), con la sesión de quien ha entrado en la app y sin el menú
+    web de My Hub.
   - **Portfolio** (`portfolio.tsx`): buscar una empresa y añadirla como posición (acciones y coste
     medio, este opcional) o a la watchlist; quitar; guardar. Se llega desde Overview ("Edit"),
     Analysis, Watchlist, Community y More.
@@ -265,9 +269,26 @@ Para trabajar contra el portal de este equipo en vez del público:
   fondo) y el favicon de la vista de navegador. Se quitó `assets/expo.icon` (el icono de Icon
   Composer de la plantilla, con el logo de Expo) y `ios.icon`: iPhone usa `icon.png`. Si se
   quiere el icono por capas de iOS 26, se hace en Icon Composer (macOS) y se vuelve a poner.
-- **Las herramientas** (Fundamentals Lab, Earnings Radar) comparten sesión con la web por cookie de
-  dominio; la app no tiene esa cookie. Abrirlas desde la app pedirá login otra vez hasta que se
-  haga un puente (pendiente de decidir cómo).
+- **Las herramientas dentro de la app** (2026-10-13; `src/app/(hub)/tool/[key].tsx`,
+  `src/lib/tools.ts`). Son webs aparte que solo admiten a quien trae la cookie de sesión del
+  portal, y la app tiene un token, no una cookie. La página empieza en el portal
+  (`/api/app/web/enter?to=<herramienta>`) con el token en la cabecera de esa única petición; el
+  portal pone la cookie y sigue a la herramienta
+  (`market-hub-landing/src/markethub/appweb.py`). Lo que hay que saber:
+  - La página se abre **sin almacén** (`incognito`): la cookie vive lo que la página, y al salir
+    no queda nada en el teléfono. Cada vez que se abre una herramienta se pasa por el puente.
+  - **El menú web de My Hub se esconde** con un estilo que la app inyecta antes de pintar
+    (`header:has(nav[aria-label="My Hub"])` y lo mismo con `aside`): depende de que las
+    herramientas sigan marcando así su menú (`HubNav.astro`). Si una lo cambia, vuelve a verse.
+  - Un enlace que sale de la herramienta se abre en el navegador del teléfono; el icono de la
+    cabecera abre ahí la página en la que se está. El botón atrás de Android retrocede dentro de
+    la herramienta antes de salir.
+  - Qué herramientas hay lo dice el portal (`tools` en `/api/config`).
+  - **Visto** en el simulador de iPhone con Expo Go: Fundamentals Lab corriendo en este equipo
+    detrás del login del portal local (`mobile-api` y `mobile-tool` de `.claude/launch.json`),
+    abierta desde More, con sesión, sin el menú, y navegando dentro. **Sin ver**: las otras tres
+    (misma cookie; Peer Map y Playground no están en este workspace), cómo queda cada una a
+    ancho de teléfono, y Android.
 - **La vista web** (`make web`) es solo para desarrollar: guarda el token en `localStorage`, que no
   es sitio para una cuenta de verdad. No se publica.
 - La plantilla de Expo traía `.claude/settings.json` activando el plugin `expo` de Claude Code; se

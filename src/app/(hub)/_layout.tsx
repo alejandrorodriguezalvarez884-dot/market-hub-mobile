@@ -1,4 +1,5 @@
-// My Hub: the tabs, and over them the screens reached from one (the portfolio's editor, the account).
+// My Hub: the tabs, and over them the screens reached from one (the portfolio's editor, the
+// account, a stock, a tool).
 import { Stack } from "expo-router/stack";
 
 import { color, font } from "@/lib/theme";
@@ -17,6 +18,7 @@ export default function Hub() {
       <Stack.Screen name="portfolio" options={{ title: "Portfolio" }} />
       <Stack.Screen name="account" options={{ title: "Account and data" }} />
       <Stack.Screen name="stock/[ticker]" options={{ title: "" }} />
+      <Stack.Screen name="tool/[key]" options={{ title: "" }} />
     </Stack>
   );
 }

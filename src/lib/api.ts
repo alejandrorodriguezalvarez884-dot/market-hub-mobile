@@ -18,6 +18,8 @@ let token: string | null = null;
 let refused: (() => void) | null = null;
 
 export const setToken = (value: string | null) => void (token = value);
+// For the one request that is not made here: the page the app opens on its way to a tool (lib/tools.ts).
+export const currentToken = () => token;
 // What to do when the portal no longer takes the token (it ran out): the session signs out.
 export const onRefused = (then: (() => void) | null) => void (refused = then);
 

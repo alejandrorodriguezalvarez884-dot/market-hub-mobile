@@ -1,24 +1,16 @@
 // What does not have a tab of its own: the portfolio's editor, the account, the analysis tools
-// and the public sections of the portal. The tools and the public sections open in the browser.
+// and the public sections of the portal. The tools open inside the app (tool/[key].tsx); the
+// public sections, in the browser.
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { Icon, type IconName } from "@/components/marks";
 import { Head, Screen, Section, Txt } from "@/components/ui";
-import { SITE, api } from "@/lib/api";
+import { SITE } from "@/lib/api";
 import { openPage } from "@/lib/hub";
 import { color, space } from "@/lib/theme";
-
-// The tools of My Hub, in the order of the site's own navigation. The portal says where each is
-// (/api/config); one it does not name is not listed.
-type Tools = { fundamentals_lab?: string | null; earnings_radar?: string | null; peer_map?: string | null; playground?: string | null };
-const TOOLS: { key: keyof Tools; icon: IconName; title: string; note: string }[] = [
-  { key: "fundamentals_lab", icon: "tools", title: "Fundamentals Lab", note: "Every number of a company: statements, valuation history, forward multiples, technicals and comparison" },
-  { key: "earnings_radar", icon: "earnings", title: "Earnings Radar", note: "What a company's latest results release says: guidance, demand, margins and themes" },
-  { key: "peer_map", icon: "peers", title: "Peer Map", note: "A company next to its peers" },
-  { key: "playground", icon: "playground", title: "Playground", note: "A board of charts and tables, put together by asking for it" },
-];
+import { TOOLS, getTools, type Tools } from "@/lib/tools";
 
 function Line({ icon, title, note, onPress, leaves = false, first = false }: { icon: IconName; title: string; note?: string; onPress: () => void; leaves?: boolean; first?: boolean }) {
   return (
@@ -39,7 +31,7 @@ export default function More() {
   const [tools, setTools] = useState<Tools | null>(null);
   useEffect(() => {
     let alive = true;
-    api<{ tools: Tools }>("/api/config").then((c) => alive && setTools(c.tools)).catch(() => {});
+    getTools().then((t) => alive && setTools(t)).catch(() => {});
     return () => {
       alive = false;
     };
@@ -56,8 +48,9 @@ export default function More() {
       </Section>
 
       {shown.length ? (
-        <Section title="Analysis tools" note="They open in the browser, and ask you to sign in there the first time.">
-          {shown.map((t, i) => <Line key={t.key} first={i === 0} leaves icon={t.icon} title={t.title} note={t.note} onPress={() => openPage(`${tools?.[t.key]}/`)} />)}
+        <Section title="Analysis tools" note="They open here, signed in as you.">
+          {shown.map((t, i) => <Line key={t.key} first={i === 0} icon={t.icon} title={t.title} note={t.note}
+            onPress={() => router.push({ pathname: "/tool/[key]", params: { key: t.key } })} />)}
         </Section>
       ) : null}
 
