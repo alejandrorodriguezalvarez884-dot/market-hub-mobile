@@ -143,6 +143,7 @@ function NewPassword() {
   const [busy, setBusy] = useState(false);
   const [said, setSaid] = useState<{ text: string; done: boolean } | null>(null);
   const second = useRef<TextInput>(null);
+  const button = useRef<View>(null);
 
   async function change() {
     if (!current || !next) return setSaid({ text: "Your current password and the new one, please.", done: false });
@@ -165,15 +166,15 @@ function NewPassword() {
         <View style={{ gap: 6 }}>
           <Label>Current password</Label>
           <Field accessibilityLabel="Current password" value={current} onChangeText={setCurrent} maxLength={200} secureTextEntry textContentType="password"
-            autoComplete="current-password" returnKeyType="next" onSubmitEditing={() => second.current?.focus()} submitBehavior="submit" />
+            autoComplete="current-password" returnKeyType="next" onSubmitEditing={() => second.current?.focus()} submitBehavior="submit" keeps={button} />
         </View>
         <View style={{ gap: 6 }}>
           <Label>New password, at least 10 characters</Label>
           <Field ref={second} accessibilityLabel="New password, at least 10 characters" value={next} onChangeText={setNext} maxLength={200} secureTextEntry
-            textContentType="newPassword" autoComplete="new-password" returnKeyType="done" />
+            textContentType="newPassword" autoComplete="new-password" returnKeyType="done" keeps={button} />
         </View>
         {said ? (said.done ? <Txt size={13} tone="up" accessibilityRole="alert">{said.text}</Txt> : <Notice text={said.text} />) : null}
-        <Button title="Change password" kind="ghost" onPress={change} busy={busy} />
+        <View ref={button} collapsable={false}><Button title="Change password" kind="ghost" onPress={change} busy={busy} /></View>
       </View>
     </Section>
   );

@@ -123,7 +123,23 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   - en Analysis un sector largo ("Consumer Defensive") salía cortado: ahora ocupa dos líneas.
   Los cinco paquetes de Expo que iban un parche por detrás del SDK 57 se subieron
   (`npx expo install --fix`); `make check` en verde, 21 de 21.
-- **Sin probar en el simulador** (2026-10-13): **el teclado en pantalla** (el simulador escribe
+- **La app de verdad en el simulador** (2026-10-13, tarde): `make sim` compila en EAS una app para
+  simulador (perfil `simulator` de `eas.json`: sin firmar, sin cuenta de Apple, y hablando con
+  `make api` de este equipo), que se instala en el simulador; es la app con su icono, su arranque
+  y sus módulos nativos, que Expo Go no tiene. Visto: la pantalla de arranque con la marca, el
+  botón blanco "Continue with Apple" encima del de Google, y que al pulsarlo sale la hoja del
+  sistema (en el simulador pide entrar en una cuenta de Apple en Ajustes: no se siguió). Y el
+  **teclado en pantalla**, que sale tras reiniciar el simulador, con tres fallos, arreglados:
+  - los resultados de una búsqueda salían bajo el campo, tapados por el teclado (Watchlist, el
+    editor de la cartera, la apuesta), y lo mismo el botón que envía un formulario (comentar,
+    compartir, cambiar la contraseña, entrar). Ahora la pantalla se desplaza lo justo para que
+    queden a la vista (`useClearOfKeyboard` y `keeps` de `Field` en `components/ui.tsx`);
+  - en la pantalla de entrada el teclado tapaba medio campo de la contraseña y el botón: el
+    `KeyboardAvoidingView` no hacía nada ahí, y se cambió por lo mismo que usan las demás;
+  - nada quitaba el teclado, que tapa las pestañas: ahora se va al arrastrar la página.
+  Los arreglos se vieron en Expo Go (búsqueda, comentario y entrada); **no están en la build 1
+  de TestFlight**: van en la siguiente.
+- **Sin probar en el simulador** (2026-10-13; el teclado ya sí, arriba): **el teclado en pantalla** (el simulador escribe
   con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
   búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van
   contra el portal público y los teclea el usuario), borrar la cuenta, y el icono y el arranque

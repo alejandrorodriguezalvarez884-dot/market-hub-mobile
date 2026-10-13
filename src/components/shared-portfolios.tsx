@@ -3,7 +3,7 @@
 // holdings did over a period, and where yours stands among them, shared or not. Sharing shows
 // weights and returns only: never amounts.
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { ShareBar } from "@/components/marks";
@@ -57,6 +57,7 @@ function Sharing({ b, reload }: { b: Board; reload: () => void }) {
   const router = useRouter();
   const on = b.you.sharing;
   const [name, setName] = useState(b.you.handle);
+  const sending = useRef<View>(null);
   const [busy, setBusy] = useState<"share" | "stop" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -93,8 +94,10 @@ function Sharing({ b, reload }: { b: Board; reload: () => void }) {
         <Bullets title="What nobody sees" items={["Your name, email or picture", "How many shares you hold, or what they are worth", "What you paid, your gains and your watchlist"]} />
         <Txt size={13} tone="muted" style={{ lineHeight: 19 }}>Only signed-in members see the shared portfolios. It follows what you hold, and stops the moment you say so.</Txt>
         <View style={{ gap: space.sm }}>
-          <Field value={name} onChangeText={setName} maxLength={20} placeholder="A name to be shown under" accessibilityLabel="The name your portfolio is shown under" autoCapitalize="words" />
-          <Button title={on ? "Change the name" : "Share my portfolio"} kind={on ? "ghost" : "primary"} onPress={() => send({ enabled: true, handle: name })} busy={busy === "share"} disabled={busy !== null} />
+          <Field value={name} onChangeText={setName} maxLength={20} placeholder="A name to be shown under" accessibilityLabel="The name your portfolio is shown under" autoCapitalize="words" keeps={sending} />
+          <View ref={sending} collapsable={false}>
+            <Button title={on ? "Change the name" : "Share my portfolio"} kind={on ? "ghost" : "primary"} onPress={() => send({ enabled: true, handle: name })} busy={busy === "share"} disabled={busy !== null} />
+          </View>
           {on ? <Button title="Stop sharing" kind="ghost" onPress={() => send({ enabled: false })} busy={busy === "stop"} disabled={busy !== null} /> : null}
         </View>
         {error ? <Notice text={error} /> : null}

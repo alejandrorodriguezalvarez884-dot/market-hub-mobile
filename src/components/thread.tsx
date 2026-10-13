@@ -1,6 +1,6 @@
 // A thread of comments: a box to write in, and the comments nested under the ones they answer.
 // A reader reports a comment that should not be there, or blocks its author, from the comment.
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { Button, Field, Notice, Txt } from "@/components/ui";
@@ -20,6 +20,7 @@ function Composer({ parent, src, onSent, onCancel }: { parent: string | null; sr
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const buttons = useRef<View>(null);
   async function send() {
     if (!text.trim()) return;
     setBusy(true);
@@ -37,8 +38,8 @@ function Composer({ parent, src, onSent, onCancel }: { parent: string | null; sr
   return (
     <View style={{ gap: space.sm }}>
       <Field value={text} onChangeText={setText} multiline maxLength={2000} placeholder={parent ? "Write your answer" : src.ask} accessibilityLabel={parent ? "Write your answer" : src.ask}
-        autoCapitalize="sentences" autoCorrect style={styles.box} />
-      <View style={styles.actions}>
+        autoCapitalize="sentences" autoCorrect keeps={buttons} style={styles.box} />
+      <View ref={buttons} collapsable={false} style={styles.actions}>
         <Button title={parent ? "Answer" : "Comment"} onPress={send} busy={busy} disabled={!text.trim()} />
         {onCancel ? <Button title="Cancel" kind="ghost" onPress={onCancel} /> : null}
       </View>

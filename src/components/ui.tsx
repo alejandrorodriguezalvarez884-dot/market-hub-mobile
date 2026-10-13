@@ -1,8 +1,8 @@
 // The pieces every screen is built from, drawn as the site draws them: a page with no boxes,
 // sections under a hairline rule, figures in the monospaced face.
-import { type PropsWithChildren, type ReactNode, type Ref } from "react";
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View,
-  type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from "react-native";
+import { createContext, use, useCallback, useEffect, useRef, type PropsWithChildren, type ReactNode, type Ref, type RefObject } from "react";
+import { ActivityIndicator, Keyboard, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View,
+  type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { color, font, radius, space } from "@/lib/theme";
@@ -24,6 +24,57 @@ export function Txt({ size = 15, weight = "regular", tone = "ink", num = false, 
 
 export const Label = (props: TxtProps) => <Txt size={12.5} tone="muted" {...props} />;
 
+// What a field needs next to it while it is typed in (the companies it suggests, the button that
+// sends it) sits under the field, which is where the keyboard comes up. The phone itself keeps the
+// field clear of the keyboard (automaticallyAdjustKeyboardInsets); this scrolls a little further,
+// until that view is clear of it too.
+type Reveal = (view: View | null, gap?: number) => void;
+export const Revealing = createContext<Reveal>(() => {});
+export const useReveal = () => use(Revealing);
+
+export function useClearOfKeyboard() {
+  const scroll = useRef<ScrollView>(null);
+  const offset = useRef(0);
+  const keyboardTop = useRef<number | null>(null);
+  const wanted = useRef<{ view: View; gap: number } | null>(null);
+
+  const settle = useCallback(() => {
+    const want = wanted.current;
+    const top = keyboardTop.current;
+    if (!want || top == null) return;
+    want.view.measureInWindow((_x, y, _width, height) => {
+      const under = y + height + want.gap - top;
+      if (under > 0) scroll.current?.scrollTo({ y: offset.current + under, animated: true });
+    });
+  }, []);
+
+  useEffect(() => {
+    // The view may be asked for before the keyboard is up (on focus): it is settled once it is.
+    const shown = Keyboard.addListener("keyboardDidShow", (e) => {
+      keyboardTop.current = e.endCoordinates.screenY;
+      settle();
+    });
+    const hidden = Keyboard.addListener("keyboardDidHide", () => {
+      keyboardTop.current = null;
+      wanted.current = null;
+    });
+    return () => {
+      shown.remove();
+      hidden.remove();
+    };
+  }, [settle]);
+
+  const reveal = useCallback<Reveal>((view, gap = space.md) => {
+    if (!view) return;
+    wanted.current = { view, gap };
+    settle();
+  }, [settle]);
+  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    offset.current = e.nativeEvent.contentOffset.y;
+  }, []);
+  return { scroll, onScroll, reveal };
+}
+
 type ScreenProps = PropsWithChildren<{ refreshing?: boolean; onRefresh?: () => void; footer?: ReactNode;
   // Under a header of its own (a screen reached from a tab), which already clears the notch.
   headed?: boolean }>;
@@ -31,16 +82,22 @@ type ScreenProps = PropsWithChildren<{ refreshing?: boolean; onRefresh?: () => v
 // A screen that scrolls, clear of the notch, with what is pinned to its bottom under it.
 export function Screen({ children, refreshing = false, onRefresh, footer, headed = false }: ScreenProps) {
   const insets = useSafeAreaInsets();
+  const { scroll, onScroll, reveal } = useClearOfKeyboard();
   return (
     // The inset is the frame's, not the content's: what scrolls goes out of sight at the status bar, not under it.
     <View style={[styles.fill, !headed && { paddingTop: insets.top }]}>
       <ScrollView
+        ref={scroll}
         style={styles.fill}
         contentContainerStyle={styles.screen}
         keyboardShouldPersistTaps="handled"
+        // Dragging the page puts the keyboard away: it covers the tabs, and nothing else would.
+        keyboardDismissMode="on-drag"
         automaticallyAdjustKeyboardInsets
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={color.muted} /> : undefined}>
-        {children}
+        <Revealing value={reveal}>{children}</Revealing>
       </ScrollView>
       {footer}
     </View>
@@ -113,9 +170,11 @@ export function Button({ title, onPress, kind = "primary", busy = false, disable
   );
 }
 
-export function Field({ style, ...rest }: TextInputProps & { ref?: Ref<TextInput> }) {
+// `keeps` is the view that has to stay in sight while the field is typed in: the button that sends it.
+export function Field({ style, keeps, onFocus, ...rest }: TextInputProps & { ref?: Ref<TextInput>; keeps?: RefObject<View | null> }) {
+  const reveal = useReveal();
   return <TextInput placeholderTextColor={color.faint} selectionColor={color.inkStrong} autoCapitalize="none" autoCorrect={false}
-    {...rest} style={[styles.field, style]} />;
+    {...rest} onFocus={(e) => (keeps && reveal(keeps.current), onFocus?.(e))} style={[styles.field, style]} />;
 }
 
 // A line of words that says something went wrong, or that something needs doing.

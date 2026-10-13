@@ -12,7 +12,7 @@
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: help install start web api demo icons apk aab ipa testflight check
+.PHONY: help install start web api demo icons apk aab ipa testflight sim check
 
 # The portal's repo, a sibling folder in the market-hub workspace.
 PORTAL ?= ../market-hub-landing
@@ -60,6 +60,11 @@ ipa: ## Build the app for iPhone with EAS, signed for TestFlight and the App Sto
 
 testflight: ## Send the latest iPhone build to App Store Connect, for TestFlight. Sending a version to review is the owner's decision
 	$(EAS) submit --platform ios --latest
+
+# No Apple account is asked for: a simulator's build is not signed. It talks to `make api` on this
+# machine (the simulator shares its localhost), so the demo account works in it.
+sim: ## Build the app for the iOS simulator with EAS: the real app, with its icon and its native modules, which Expo Go does not have
+	$(EAS) build --platform ios --profile simulator
 
 check: ## Type check, lint and Expo's own checks of the project
 	npx tsc --noEmit

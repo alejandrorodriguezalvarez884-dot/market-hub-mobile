@@ -1,10 +1,10 @@
 // The search box: a ticker or a company's name. The suggestions are the portal's (the SEC's list
 // of companies listed in the US); choosing one hands it to the screen.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { Icon } from "@/components/marks";
-import { Field, Txt } from "@/components/ui";
+import { Field, Txt, useReveal } from "@/components/ui";
 import { api, message } from "@/lib/api";
 import { tidyName } from "@/lib/format";
 import { color, radius, space } from "@/lib/theme";
@@ -32,6 +32,14 @@ export function CompanySearch({ label, onPick, action = "Add" }: { label: string
     };
   }, [asked]);
 
+  // The suggestions come up under the box, where the keyboard is: they are brought clear of it.
+  const reveal = useReveal();
+  const under = useRef<View>(null);
+  const shown = found.length || note ? asked : "";
+  useEffect(() => {
+    if (shown) reveal(under.current);
+  }, [shown, reveal]);
+
   const pick = (c: Company) => {
     setQ("");
     onPick({ ticker: c.ticker, name: tidyName(c.name) });
@@ -44,6 +52,7 @@ export function CompanySearch({ label, onPick, action = "Add" }: { label: string
         <Field accessibilityLabel={label} placeholder="Company or ticker: Apple, MSFT, SPY…" value={q} onChangeText={setQ} 
           returnKeyType="search" onSubmitEditing={() => found[0] && pick(found[0])} style={styles.input} />
       </View>
+      <View ref={under} collapsable={false}>
       {found.length ? (
         <View style={styles.list} accessibilityRole="list">
           {found.map((c, i) => (
@@ -57,6 +66,7 @@ export function CompanySearch({ label, onPick, action = "Add" }: { label: string
         </View>
       ) : null}
       {note ? <Txt size={12} tone="muted" style={{ marginTop: space.sm }}>{note}</Txt> : null}
+      </View>
     </View>
   );
 }

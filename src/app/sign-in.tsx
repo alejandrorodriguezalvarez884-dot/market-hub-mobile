@@ -3,12 +3,12 @@
 // it gets back.
 import * as AppleAuthentication from "expo-apple-authentication";
 import { useEffect, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, type TextInput } from "react-native";
+import { ScrollView, StyleSheet, View, type TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Captcha } from "@/components/captcha";
 import { GoogleMark, Logo } from "@/components/marks";
-import { Button, Field, Label, Notice, Txt } from "@/components/ui";
+import { Button, Field, Label, Notice, Revealing, Txt, useClearOfKeyboard } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
 import { appleOnThisPhone } from "@/lib/apple";
 import { openPage } from "@/lib/hub";
@@ -37,6 +37,9 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const first = useRef<TextInput>(null);
   const second = useRef<TextInput>(null);
+  // The button that sends the form stays in sight while its fields are typed in.
+  const submit = useRef<View>(null);
+  const { scroll, onScroll, reveal } = useClearOfKeyboard();
   const checked = registration === "captcha";
 
   useEffect(() => {
@@ -104,8 +107,10 @@ export default function SignIn() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xxl, paddingBottom: insets.bottom + space.xl }]} keyboardShouldPersistTaps="handled">
+    <View style={styles.fill}>
+      <ScrollView ref={scroll} contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xxl, paddingBottom: insets.bottom + space.xl }]}
+        keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets onScroll={onScroll} scrollEventThrottle={16}>
+        <Revealing value={reveal}>
         <View style={styles.brand}>
           <Logo size={22} />
           <Txt size={17} weight="semibold" tone="strong">Market Hub</Txt>
@@ -135,24 +140,26 @@ export default function SignIn() {
             <View style={{ gap: 6 }}>
               <Label>Your name</Label>
               <Field accessibilityLabel="Your name" value={name} onChangeText={setName} maxLength={60} autoCapitalize="words" textContentType="name"
-                autoComplete="name" returnKeyType="next" onSubmitEditing={() => first.current?.focus()} submitBehavior="submit" />
+                autoComplete="name" returnKeyType="next" onSubmitEditing={() => first.current?.focus()} submitBehavior="submit" keeps={submit} />
             </View>
           ) : null}
           <View style={{ gap: 6 }}>
             <Label>Email</Label>
             <Field ref={first} accessibilityLabel="Email" value={email} onChangeText={setEmail} maxLength={254} keyboardType="email-address" textContentType="username"
-              autoComplete="email" returnKeyType="next" onSubmitEditing={() => second.current?.focus()} submitBehavior="submit" />
+              autoComplete="email" returnKeyType="next" onSubmitEditing={() => second.current?.focus()} submitBehavior="submit" keeps={submit} />
           </View>
           <View style={{ gap: 6 }}>
             <Label>Password</Label>
             <Field ref={second} accessibilityLabel="Password" value={password} onChangeText={setPassword} maxLength={200} secureTextEntry
               textContentType={making ? "newPassword" : "password"} autoComplete={making ? "new-password" : "current-password"}
-              returnKeyType={making ? "done" : "go"} onSubmitEditing={making ? undefined : enter} />
+              returnKeyType={making ? "done" : "go"} onSubmitEditing={making ? undefined : enter} keeps={submit} />
             {making ? <Label style={{ lineHeight: 18 }}>At least 10 characters. We cannot send you a new one if you forget it: keep it somewhere safe.</Label> : null}
           </View>
           {making && checked ? <Captcha key={turn} onToken={setCheck} onError={() => setError("The check that you are a person could not load. Check your connection and try again.")} /> : null}
           {error ? <Notice text={error} /> : null}
-          <Button title={making ? "Create my account" : "Sign in"} onPress={enter} busy={busy} disabled={google || apple} style={{ marginTop: space.xs }} />
+          <View ref={submit} collapsable={false}>
+            <Button title={making ? "Create my account" : "Sign in"} onPress={enter} busy={busy} disabled={google || apple} style={{ marginTop: space.xs }} />
+          </View>
         </View>
 
         <View style={{ gap: space.md }}>
@@ -172,8 +179,9 @@ export default function SignIn() {
             </Txt>
           ) : null}
         </View>
+        </Revealing>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

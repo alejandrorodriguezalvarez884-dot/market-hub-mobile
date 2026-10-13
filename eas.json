@@ -16,6 +16,15 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://localhost:8000"
+      }
     }
   },
   "submit": {
