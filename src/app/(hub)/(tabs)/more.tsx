@@ -10,7 +10,15 @@ import { SITE, api } from "@/lib/api";
 import { openPage } from "@/lib/hub";
 import { color, space } from "@/lib/theme";
 
-type Tools = { earnings_radar: string | null; fundamentals_lab: string | null };
+// The tools of My Hub, in the order of the site's own navigation. The portal says where each is
+// (/api/config); one it does not name is not listed.
+type Tools = { fundamentals_lab?: string | null; earnings_radar?: string | null; peer_map?: string | null; playground?: string | null };
+const TOOLS: { key: keyof Tools; icon: IconName; title: string; note: string }[] = [
+  { key: "fundamentals_lab", icon: "tools", title: "Fundamentals Lab", note: "Every number of a company: statements, valuation history, forward multiples, technicals and comparison" },
+  { key: "earnings_radar", icon: "earnings", title: "Earnings Radar", note: "What a company's latest results release says: guidance, demand, margins and themes" },
+  { key: "peer_map", icon: "peers", title: "Peer Map", note: "A company next to its peers" },
+  { key: "playground", icon: "playground", title: "Playground", note: "A board of charts and tables, put together by asking for it" },
+];
 
 function Line({ icon, title, note, onPress, leaves = false, first = false }: { icon: IconName; title: string; note?: string; onPress: () => void; leaves?: boolean; first?: boolean }) {
   return (
@@ -37,6 +45,8 @@ export default function More() {
     };
   }, []);
 
+  const shown = TOOLS.filter((t) => tools?.[t.key]);
+
   return (
     <Screen>
       <Head title="More" />
@@ -45,12 +55,9 @@ export default function More() {
         <Line icon="account" title="Account and data" note="Who is signed in, what is kept, and the way out" onPress={() => router.push("/account")} />
       </Section>
 
-      {tools?.fundamentals_lab || tools?.earnings_radar ? (
+      {shown.length ? (
         <Section title="Analysis tools" note="They open in the browser, and ask you to sign in there the first time.">
-          {tools.fundamentals_lab ? <Line first leaves icon="tools" title="Fundamentals Lab" note="Every number of a company: statements, valuation history, forward multiples, technicals and comparison"
-            onPress={() => openPage(`${tools.fundamentals_lab}/`)} /> : null}
-          {tools.earnings_radar ? <Line leaves first={!tools.fundamentals_lab} icon="earnings" title="Earnings Radar" note="What a company's latest results release says: guidance, demand, margins and themes"
-            onPress={() => openPage(`${tools.earnings_radar}/`)} /> : null}
+          {shown.map((t, i) => <Line key={t.key} first={i === 0} leaves icon={t.icon} title={t.title} note={t.note} onPress={() => openPage(`${tools?.[t.key]}/`)} />)}
         </Section>
       ) : null}
 

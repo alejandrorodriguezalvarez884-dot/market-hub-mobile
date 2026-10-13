@@ -56,6 +56,8 @@ const ICONS = {
   community: "M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2 20a6 6 0 0 1 12 0m1.5-5.5A6 6 0 0 1 22 20",
   tools: "M4 19V9m6 10V5m6 14v-7m4 7H2",
   earnings: "M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7",
+  peers: "M4 7a2 2 0 1 0 4 0 2 2 0 1 0-4 0M16 6a2 2 0 1 0 4 0 2 2 0 1 0-4 0M11 18a2 2 0 1 0 4 0 2 2 0 1 0-4 0M8 6.8l8-.6M7 8.7l5 7.6M17.2 7.8l-3.3 8.4",
+  playground: "M4 4h7v9H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 15h7v5H4z",
   account: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0",
   markets: "M3 17l6-6 4 4 8-8M15 7h6v6",
   news: "M4 5h13v14H6a2 2 0 0 1-2-2V5Zm13 4h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5",
