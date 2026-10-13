@@ -163,6 +163,15 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   capturas. Son opcionales en App Store Connect. Apple no publica en su guía los márgenes que
   recorta: el texto va al centro por eso, y cómo quedan en la tienda no se ha visto. Si se
   repiten las capturas, `make art` después.
+- **Los textos de las tiendas, con el enfoque de la IA** (2026-10-13, lo pidió el usuario): el
+  titular es la cartera leída por IA ("Your portfolio, read by AI."), no "Your stocks,
+  described". Reescritos el texto promocional, la descripción (con "AI readings", "AI tools" y
+  un "About the AI" que dice qué recibe el modelo), las palabras clave y las notas al revisor
+  (dónde se usa la IA y qué se le manda), en inglés y en español, en
+  `store/app-store/LISTING.md`, y los de `store/google-play/LISTING.md` a juego. Solo se dice lo
+  que la app hace: las frases las escribe un modelo y las cifras las calcula el código; la IA
+  no aconseja. Las capturas no se tocaron (se sacaron en local sin clave del modelo: sus frases
+  son las del código).
 - **Sin probar en el simulador** (2026-10-13; el teclado ya sí, arriba): **el teclado en pantalla** (el simulador escribe
   con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
   búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van

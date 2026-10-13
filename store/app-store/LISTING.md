@@ -46,43 +46,43 @@ AI-based portfolio tracker
 **Promotional text** (170 como mucho; se puede cambiar sin enviar versión)
 
 ```
-A private page for your own stocks: what they are worth, how they moved and how they stand against the indices. It describes. It never tells you what to do.
+Your portfolio and any US stock, read back to you by AI in plain words. AI tools for a company's numbers and its results. It describes; it never tells you what to do.
 ```
 
 **Keywords** (100 como mucho, separadas por comas, sin repetir las del nombre)
 
 ```
-stocks,watchlist,shares,investing,holdings,sp500,nasdaq,charts,candles,sectors,gains,equities
+stocks,watchlist,investing,holdings,sp500,nasdaq,charts,fundamentals,earnings,analysis,finance
 ```
 
 **Description** (4000 como mucho)
 
 ```
-Market Hub is a private page for your own stocks. Add what you hold, or just the stocks you follow, and see them described: what they are worth, how they moved, what the portfolio is made of and how it stands against the indices.
+The Market Hub is a private page for your own stocks, read back to you by AI. Add what you hold, or just the stocks you follow, and a language model puts the figures into plain words: what your portfolio is made of, how it has moved and how it stands against the indices.
 
-It describes. It never tells you to buy, sell or hold, it makes no predictions and it sets no price targets. It does not connect to any broker and it cannot trade.
+The AI describes. It never tells you to buy, sell or hold, it makes no predictions and it sets no price targets. The app does not connect to any broker and it cannot trade.
 
-OVERVIEW
-• The value of your portfolio, today's move and your gain or loss against your own average cost
-• Your portfolio read back in plain sentences
+AI READINGS
+• Your portfolio read back in plain sentences: how it stands against the index, how concentrated it is, its sectors and how it moves
+• A reading of every stock you follow, aspect by aspect: trend, momentum, 52-week range, volume, what analysts estimate and its valuation
+• The same reading for any other US stock you look up
+
+AI TOOLS
+• Fundamentals Lab: every number of a company, its valuation against its own history, its technical picture, and an AI reading of what the numbers show
+• Earnings Radar: what a company's latest results release says, read by AI: guidance, demand, margins and themes
+• Playground: a board of charts and tables, put together by asking for it in a chat
+• Peer Map: a company next to its peers
+
+YOUR PORTFOLIO
+• Its value, today's move and your gain or loss against your own average cost
 • Today's holdings next to the S&P 500, the Nasdaq 100, the Dow and the Russell 2000
+• What it is made of: by sector, country, volatility and company size
 • News on the companies you hold or follow
-
-ANALYSIS
-• What the portfolio is made of: by sector, country, volatility and company size
-• How it moves and how concentrated it is
-• Every position, sorted by the figure you choose
 
 WATCHLIST
 • Each stock on one line: price, trend, and where it stands against its own averages and against the index
 • A chart per stock, as candles or as a line, with its 20, 50 and 200-day averages and volume
-• A reading of each stock, aspect by aspect: trend, momentum, 52-week range, volume, what analysts estimate and its valuation
 • All your stocks on one map
-
-ANALYSIS TOOLS
-• Fundamentals Lab: every number of a company, its valuation against its own history and its technical picture
-• Earnings Radar: what a company's latest results release says
-• Peer Map and Playground: a company next to its peers, and a board of charts and tables put together by asking for it
 
 COMMUNITY
 • Share your portfolio's mix if you choose to: tickers and weights only, under a name you pick. Never your name, your amounts or what you paid
@@ -94,7 +94,10 @@ YOUR ACCOUNT
 • See everything that is kept about you, and delete your account and all of it from the app at any time
 • No ads and no tracking
 
-Market Hub covers companies listed in the United States. Market data comes from third-party providers and may be delayed or incomplete. Nothing in the app is investment advice.
+ABOUT THE AI
+The figures are computed by the app; the AI only puts them into words. To read your portfolio it is sent your tickers, each one's share of the portfolio and their returns. Never your name, your email, how many shares you hold or what you paid. Text written by AI can be wrong.
+
+The Market Hub covers companies listed in the United States. Market data comes from third-party providers and may be delayed or incomplete. Nothing in the app is investment advice.
 ```
 
 ### Spanish (Spain), traducción
@@ -102,55 +105,55 @@ Market Hub covers companies listed in the United States. Market data comes from 
 **Nombre**
 
 ```
-Market Hub: tu cartera
+The Market Hub
 ```
 
 **Subtítulo**
 
 ```
-Tus acciones, descritas
+Tu cartera, leída por IA
 ```
 
 **Texto promocional**
 
 ```
-Una página privada para tus acciones: cuánto valen, cómo se han movido y cómo van frente a los índices. Describe. Nunca te dice qué hacer.
+Tu cartera y cualquier acción de EE. UU., contadas por IA en palabras sencillas. Herramientas de IA para las cifras y resultados de una empresa. Nunca te dice qué hacer.
 ```
 
 **Palabras clave**
 
 ```
-acciones,bolsa,cartera,seguimiento,inversión,valores,sp500,nasdaq,gráficos,velas,sectores
+acciones,bolsa,inversión,valores,seguimiento,sp500,nasdaq,gráficos,fundamentales,resultados,análisis
 ```
 
 **Descripción**
 
 ```
-Market Hub es una página privada para tus acciones. Añade lo que tienes, o solo las acciones que sigues, y las verás descritas: cuánto valen, cómo se han movido, de qué está hecha la cartera y cómo va frente a los índices.
+The Market Hub es una página privada para tus acciones, leída por IA. Añade lo que tienes, o solo las acciones que sigues, y un modelo de lenguaje pone las cifras en palabras sencillas: de qué está hecha tu cartera, cómo se ha movido y cómo va frente a los índices.
 
-Describe. Nunca te dice que compres, vendas o mantengas, no hace predicciones ni da precios objetivo. No se conecta a ningún bróker y no puede operar.
+La IA describe. Nunca te dice que compres, vendas o mantengas, no hace predicciones ni da precios objetivo. La app no se conecta a ningún bróker y no puede operar.
 
-RESUMEN
-• El valor de tu cartera, el movimiento de hoy y tu ganancia o pérdida frente a tu propio coste medio
-• Tu cartera contada en frases sencillas
+LECTURAS CON IA
+• Tu cartera contada en frases sencillas: cómo va frente al índice, cuánto se concentra, sus sectores y cómo se mueve
+• Una lectura de cada acción que sigues, aspecto por aspecto: tendencia, impulso, rango de 52 semanas, volumen, lo que estiman los analistas y su valoración
+• La misma lectura para cualquier otra acción de EE. UU. que busques
+
+HERRAMIENTAS DE IA
+• Fundamentals Lab: todas las cifras de una empresa, su valoración frente a su propia historia, su cuadro técnico y una lectura con IA de lo que muestran las cifras
+• Earnings Radar: lo que dice el último comunicado de resultados de una empresa, leído por IA: previsiones, demanda, márgenes y temas
+• Playground: un tablero de gráficos y tablas que se compone pidiéndolo en un chat
+• Peer Map: una empresa junto a sus comparables
+
+TU CARTERA
+• Su valor, el movimiento de hoy y tu ganancia o pérdida frente a tu propio coste medio
 • Lo que tienes hoy junto al S&P 500, el Nasdaq 100, el Dow y el Russell 2000
+• De qué está hecha: por sector, país, volatilidad y tamaño de empresa
 • Noticias de las empresas que tienes o sigues
-
-ANÁLISIS
-• De qué está hecha la cartera: por sector, país, volatilidad y tamaño de empresa
-• Cómo se mueve y cuánto se concentra
-• Todas las posiciones, ordenadas por la cifra que elijas
 
 SEGUIMIENTO
 • Cada acción en una línea: precio, tendencia y dónde está frente a sus medias y frente al índice
 • Un gráfico por acción, en velas o en línea, con sus medias de 20, 50 y 200 sesiones y el volumen
-• Una lectura de cada acción, aspecto por aspecto: tendencia, impulso, rango de 52 semanas, volumen, lo que estiman los analistas y su valoración
 • Todas tus acciones en un mapa
-
-HERRAMIENTAS DE ANÁLISIS
-• Fundamentals Lab: todas las cifras de una empresa, su valoración frente a su propia historia y su cuadro técnico
-• Earnings Radar: lo que dice el último comunicado de resultados de una empresa
-• Peer Map y Playground: una empresa junto a sus comparables, y un tablero de gráficos y tablas que se compone pidiéndolo
 
 COMUNIDAD
 • Comparte la composición de tu cartera si quieres: solo tickers y pesos, con el nombre que elijas. Nunca tu nombre, tus importes ni lo que pagaste
@@ -162,7 +165,10 @@ TU CUENTA
 • Mira todo lo que se guarda de ti, y borra tu cuenta y todo ello desde la app cuando quieras
 • Sin anuncios y sin rastreo
 
-Market Hub cubre empresas cotizadas en Estados Unidos. La app está en inglés. Los datos de mercado vienen de proveedores externos y pueden llegar con retraso o incompletos. Nada en la app es asesoramiento de inversión.
+SOBRE LA IA
+Las cifras las calcula la app; la IA solo las pone en palabras. Para leer tu cartera recibe tus tickers, el peso de cada uno y sus rentabilidades. Nunca tu nombre, tu email, cuántas acciones tienes ni lo que pagaste. Un texto escrito por IA puede equivocarse.
+
+The Market Hub cubre empresas cotizadas en Estados Unidos. La app está en inglés. Los datos de mercado vienen de proveedores externos y pueden llegar con retraso o incompletos. Nada en la app es asesoramiento de inversión.
 ```
 
 ## 3. Gráficos y datos de la ficha
@@ -215,9 +221,11 @@ contenido médico. A la pregunta sobre contenido creado por usuarios o mensajes 
 - **Notes** (para copiar, en inglés):
 
 ```
-Market Hub is the phone version of the private area of https://themarkethub.app. It shows the stocks a user types in (tickers, number of shares, average cost) valued at market prices from third-party data providers, and describes them. It gives no advice, makes no predictions, does not connect to any broker and cannot place orders or move money.
+The Market Hub is the phone version of the private area of https://themarkethub.app. It shows the stocks a user types in (tickers, number of shares, average cost) valued at market prices from third-party data providers, and describes them. It gives no advice, makes no predictions, does not connect to any broker and cannot place orders or move money.
 
 Sign in with the demo account above (email and password). Sign in with Apple and with Google also work. The demo account already has a small portfolio and a watchlist.
+
+Where AI is used: the sentences that read a portfolio or a stock back to the user ("Your portfolio, read back" on Overview, "How it stands" on a stock) are written by a language model (Anthropic) on our server, and so are the readings in Fundamentals Lab and Earnings Radar and the chat of the Playground. The figures are computed by our code; the model only words them. For a portfolio the server sends the model the tickers, each one's share in percent and their returns, with no name, email, account id, share counts or costs; for a stock, that one ticker and its public market figures. This is on our privacy page (https://themarkethub.app/privacy/). The model gives no advice, predictions or price targets.
 
 The analysis tools under More (Fundamentals Lab, Earnings Radar, Peer Map, Playground) are our own web tools, shown inside the app and signed in with the same account; everything else in the app is native.
 
