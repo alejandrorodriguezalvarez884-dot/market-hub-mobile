@@ -24,7 +24,7 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 | 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Agente deja los campos, usuario guarda | **Hecho** (2026-10-13), todo guardado por el usuario: la página de la versión (textos, capturas, cabecera e imagen de búsqueda, **build 4**, cuenta de demostración y contacto), la clasificación por edades (13+), App Privacy publicada, Content Rights ("sí, con los derechos necesarios": declaración del usuario), precio 0,00 en 175 países, y la declaración de la Digital Services Act (enviada; Apple la tiene "In Review"). La versión se publica sola al aprobarse (decisión del usuario) |
 | 9 | Capturas del simulador (apartado 3) | Agente | **Hecho** (2026-10-13): cinco, en `store/app-store/screenshots/` |
 | 10 | Antes de enviar: vaciar `MARKETHUB_APP_REDIRECTS` en el portal y desplegar | Agente, con permiso | Hecho (2026-10-13, revisión `market-hub-00038-n7x`): el login de Google solo devuelve su código a la app instalada |
-| 11 | Enviar a revisión. **Publicar es decisión del usuario, versión a versión** | Usuario | Pendiente |
+| 11 | Enviar a revisión. **Publicar es decisión del usuario, versión a versión** | Usuario | **Enviada** el 2026-10-13 a las 20:50 (1.0.0, build 4): "Waiting for Review". Publicación automática al aprobarse |
 
 ## 2. La ficha
 
