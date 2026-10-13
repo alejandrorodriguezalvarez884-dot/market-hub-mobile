@@ -19,17 +19,17 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 4a | Crear cuenta con email desde la app, con el captcha en un WebView | Hecho (2026-10-08), probado en la vista de navegador sin captcha, y el portal **desplegado** (revisión `market-hub-00027-wcg`). **Falta probar el captcha en un teléfono** |
 | 4b | Icono y pantalla de arranque de Market Hub | Hecho (2026-10-08); se ven en una compilación, no en Expo Go |
 | 4c | Identificadores y configuración de EAS | Hecho (2026-10-08): `app.themarkethub.hub` en las dos plataformas, `eas.json`, `make apk` y `make aab`. **Falta** que el usuario haga `eas login` y `eas init` |
-| 4d | Login con Apple; compilación de desarrollo con EAS | Pendiente (pide la cuenta de Apple; el usuario aún no la tiene, 2026-10-08) |
+| 4d | Login con Apple | Escrito (2026-10-13) en la app y en el portal, con sus tests; **el portal sin desplegar** y **sin probar con Apple de verdad** (Expo Go no lleva el módulo: hace falta una compilación, y esa pide la cuenta de Apple Developer, que el usuario aún no tiene) |
 | 5 | Analysis, Watchlist y Community | Hecho (2026-10-07); probado en la vista de navegador y, el 2026-10-13, en el simulador de iPhone |
 | 5b | Lo que la web tenía y la app no: noticias en Overview, volumen en la ficha, lo guardado y cambiar contraseña en Account | Hecho (2026-10-08) y probado en la vista de navegador |
 | 6a | Google Play: ficha, gráficos, formularios y privacidad | **En espera** (decisión del usuario, 2026-10-08): no tiene teléfono Android, y Google lo exige para verificar una cuenta personal nueva; también hace falta para instalar el APK y sacar las capturas. Se retoma cuando tenga uno. Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. La página de privacidad del portal ya lo dice, desplegada. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción) y las capturas |
-| 6b | TestFlight | Pendiente |
+| 6b | App Store y TestFlight | Preparado (2026-10-13) en `store/app-store/LISTING.md`: pasos, textos, etiquetas de privacidad, notas para el revisor y las reglas de Apple que tocan a la app. **Bloquea el envío**: la regla 1.2 (denunciar comentarios y bloquear usuarios, que la app no tiene) y que el portal no publica ningún contacto. Faltan la cuenta de Apple, `eas init`, la compilación y las capturas |
 
 ## Dónde estamos
 
 - **Expo SDK 57**, React Native 0.86, React 19, `expo-router` (rutas en `src/app/`), TypeScript
   estricto. Sin carpetas `ios/` ni `android/`: las genera Expo al compilar.
-- **Pantallas**: `sign-in` ("Continue with Google" y, debajo, email y contraseña, para entrar o
+- **Pantallas**: `sign-in` (en un iPhone, el botón de Apple; "Continue with Google" y, debajo, email y contraseña, para entrar o
   para **crear una cuenta**: el mismo formulario con el nombre, el captcha y otra palabra en el
   botón) y, ya dentro,
   cinco pestañas en el orden del menú de la web (`src/app/(hub)/(tabs)/`), más tres pantallas que
@@ -194,8 +194,26 @@ Para trabajar contra el portal de este equipo en vez del público:
   la app vuelve a dibujar el widget. Un enlace tocado dentro del widget se abre en el navegador.
   Las dos rutas están en producción desde el 2026-10-08 (comprobado: la página del captcha
   responde con el widget, y un registro sin captcha da 400 con el mensaje del portal).
-- **Apple** pedirá "Sign in with Apple" al ofrecer el de Google, y una dirección con la política
-  de privacidad. La del portal dice lo de la app desde el 2026-10-08 (desplegado).
+- **Entrar con Apple** (`src/lib/apple.ts`, 2026-10-13; `expo-apple-authentication`, con su
+  plugin y `ios.usesAppleSignIn` en `app.json`). La app pide un `nonce` al portal
+  (`/api/app/auth/apple/begin`), se lo pasa al inicio de sesión del iPhone y manda al portal el
+  token que Apple firma, con el nombre (Apple lo da solo la primera vez, y a la app, no en el
+  token): `/api/app/auth/apple` devuelve la sesión. Quien comprueba el token es el portal
+  (`market-hub-landing/src/markethub/applesignin.py`). El botón es el de Apple, blanco, encima del
+  de Google, y solo sale en un iPhone, con el módulo presente y contra un portal que dice
+  `apple_sign_in` en `/api/config`.
+  - **En Expo Go no sale**: Expo Go no lleva el módulo (`isAvailableAsync` da falso; visto en el
+    simulador el 2026-10-13). Tampoco en Android ni en la vista de navegador. Se prueba en una
+    compilación: TestFlight, o `npx expo run:ios` en este Mac, que pide CocoaPods.
+  - El portal solo toma tokens hechos para `app.themarkethub.hub`.
+  - **Pendiente**: desplegar el portal; revocar el token de Apple al borrar la cuenta (pide una
+    clave de la cuenta de Apple Developer); y una cuenta de Apple no tiene cómo entrar en la web.
+- **App Store** (2026-10-13): `store/app-store/LISTING.md`, como el de Play. Lo que no estaba
+  previsto y sale de leer las reglas de Apple: **la 1.2** pide, a una app con contenido de
+  usuarios, poder denunciar un contenido y bloquear a un usuario, y la discusión de la
+  competición no lo tiene (o se añade en portal, web y app, o la primera versión de iPhone sale
+  sin la discusión: decisión del usuario); y hace falta **un contacto publicado** en el portal,
+  que hoy no hay. `ios.config.usesNonExemptEncryption: false` en `app.json` (la app solo usa HTTPS).
 - **Identificadores de la app**: `app.themarkethub.hub` en `ios.bundleIdentifier` y en
   `android.package`, elegido por el usuario (2026-10-08). Son para siempre una vez publicada.
 - **Google Play** (2026-10-08; el usuario quería ir publicando ahí primero, con cuenta personal;

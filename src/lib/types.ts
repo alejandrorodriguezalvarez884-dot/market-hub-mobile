@@ -62,8 +62,8 @@ export type NewsItem = {
 export type News = { sample: boolean; items: NewsItem[]; refreshed_utc: string | null;
   stale: boolean }; // older than the desk allows: whoever shows it asks for a refresh
 
-// `provider` says how the account signs in: with Google, or with a password kept by the portal.
-export type User = { id: string; email: string; name: string; picture: string; provider?: "google" | "password" };
+// `provider` says how the account signs in: with Google, with Apple, or with a password kept by the portal.
+export type User = { id: string; email: string; name: string; picture: string; provider?: "google" | "password" | "apple" };
 export type Position = { ticker: string; shares: number; avg_cost: number | null };
 export type Portfolio = { positions: Position[]; watchlist: string[]; updated_utc?: string };
 export type Company = { ticker: string; name: string };

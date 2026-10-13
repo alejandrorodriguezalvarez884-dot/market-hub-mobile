@@ -4,6 +4,7 @@
 import { createContext, use, useCallback, useEffect, useMemo, useState, type PropsWithChildren } from "react";
 
 import { api, onRefused, setToken } from "./api";
+import { askApple } from "./apple";
 import { askGoogle } from "./google";
 import { read, write } from "./storage";
 import type { User } from "./types";
@@ -22,6 +23,8 @@ type Session = {
   register: (name: string, email: string, password: string, captcha: string) => Promise<void>;
   // False when the user closed Google's page without choosing an account.
   signInWithGoogle: () => Promise<boolean>;
+  // False when the user closed Apple's sheet without signing in. On an iPhone only.
+  signInWithApple: () => Promise<boolean>;
   signOut: () => Promise<void>;
 };
 
@@ -98,6 +101,15 @@ export function SessionProvider({ children }: PropsWithChildren) {
     return true;
   }, [keep]);
 
-  const value = useMemo(() => ({ user, loading, signIn, register, signInWithGoogle, signOut }), [user, loading, signIn, register, signInWithGoogle, signOut]);
+  const signInWithApple = useCallback(async () => {
+    const asked = await askApple();
+    if (!asked) return false;
+    const entered = await api<Entered>("/api/app/auth/apple", { method: "POST", body: asked });
+    await keep({ token: entered.token, user: entered.user });
+    return true;
+  }, [keep]);
+
+  const value = useMemo(() => ({ user, loading, signIn, register, signInWithGoogle, signInWithApple, signOut }),
+    [user, loading, signIn, register, signInWithGoogle, signInWithApple, signOut]);
   return <Context value={value}>{children}</Context>;
 }

@@ -1,5 +1,7 @@
-// The way in: with Google, or with an email and a password, to sign in or to make an account. The
-// portal checks the password; the app never keeps it, only the token it gets back.
+// The way in: with Apple (on an iPhone), with Google, or with an email and a password, to sign in
+// or to make an account. The portal checks each; the app never keeps a password, only the token
+// it gets back.
+import * as AppleAuthentication from "expo-apple-authentication";
 import { useEffect, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, type TextInput } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,15 +10,16 @@ import { Captcha } from "@/components/captcha";
 import { GoogleMark, Logo } from "@/components/marks";
 import { Button, Field, Label, Notice, Txt } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
+import { appleOnThisPhone } from "@/lib/apple";
 import { openPage } from "@/lib/hub";
 import { useSession } from "@/lib/session";
-import { color, space } from "@/lib/theme";
+import { color, radius, space } from "@/lib/theme";
 
 // Whether an account can be made on this portal, and whether it takes the captcha (/api/config).
 type Registration = "open" | "captcha" | "closed";
 
 export default function SignIn() {
-  const { signIn, register, signInWithGoogle } = useSession();
+  const { signIn, register, signInWithGoogle, signInWithApple } = useSession();
   const insets = useSafeAreaInsets();
   const [registration, setRegistration] = useState<Registration>("closed");
   const [making, setMaking] = useState(false);
@@ -28,6 +31,9 @@ export default function SignIn() {
   const [turn, setTurn] = useState(0);
   const [busy, setBusy] = useState(false);
   const [google, setGoogle] = useState(false);
+  // Apple's button is shown on a phone that signs in with Apple, to a portal that takes its token.
+  const [appleHere, setAppleHere] = useState(false);
+  const [apple, setApple] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const first = useRef<TextInput>(null);
   const second = useRef<TextInput>(null);
@@ -35,8 +41,13 @@ export default function SignIn() {
 
   useEffect(() => {
     let alive = true;
-    api<{ password_login: boolean; registration?: Registration }>("/api/config")
-      .then((c) => alive && setRegistration(c.password_login ? c.registration ?? "open" : "closed")).catch(() => {});
+    api<{ password_login: boolean; registration?: Registration; apple_sign_in?: boolean }>("/api/config")
+      .then(async (c) => {
+        if (!alive) return;
+        setRegistration(c.password_login ? c.registration ?? "open" : "closed");
+        const here = !!c.apple_sign_in && (await appleOnThisPhone());
+        if (alive) setAppleHere(here);
+      }).catch(() => {});
     return () => {
       alive = false;
     };
@@ -79,6 +90,19 @@ export default function SignIn() {
     }
   }
 
+  async function enterWithApple() {
+    if (busy || google || apple) return;
+    setApple(true);
+    setError(null);
+    try {
+      // Signed in, this screen gives way to My Hub; the sheet closed, it stays as it was.
+      if (!(await signInWithApple())) setApple(false);
+    } catch (e) {
+      setError(message(e, "Signing in with Apple failed."));
+      setApple(false);
+    }
+  }
+
   return (
     <KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xxl, paddingBottom: insets.bottom + space.xl }]} keyboardShouldPersistTaps="handled">
@@ -95,7 +119,13 @@ export default function SignIn() {
         </View>
 
         <View style={{ gap: space.md }}>
-          <Button title="Continue with Google" kind="ghost" mark={<GoogleMark />} onPress={enterWithGoogle} busy={google} disabled={busy} />
+          {appleHere ? (
+            // Apple's own button, as its guidelines ask: the white one, on this dark page.
+            <AppleAuthentication.AppleAuthenticationButton buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE} cornerRadius={radius} onPress={enterWithApple}
+              style={[styles.apple, (apple || busy || google) && { opacity: 0.6 }]} />
+          ) : null}
+          <Button title="Continue with Google" kind="ghost" mark={<GoogleMark />} onPress={enterWithGoogle} busy={google} disabled={busy || apple} />
           <View style={styles.or}>
             <View style={styles.rule} />
             <Label>or with your email</Label>
@@ -122,13 +152,13 @@ export default function SignIn() {
           </View>
           {making && checked ? <Captcha key={turn} onToken={setCheck} onError={() => setError("The check that you are a person could not load. Check your connection and try again.")} /> : null}
           {error ? <Notice text={error} /> : null}
-          <Button title={making ? "Create my account" : "Sign in"} onPress={enter} busy={busy} disabled={google} style={{ marginTop: space.xs }} />
+          <Button title={making ? "Create my account" : "Sign in"} onPress={enter} busy={busy} disabled={google || apple} style={{ marginTop: space.xs }} />
         </View>
 
         <View style={{ gap: space.md }}>
           {registration !== "closed" ? (
             <Txt size={13} tone="muted" style={{ lineHeight: 20 }}>
-              {making ? "Have an account? " : "New here? Continue with Google, or "}
+              {making ? "Have an account? " : `New here? Continue with ${appleHere ? "Apple or Google" : "Google"}, or `}
               <Txt size={13} tone="strong" style={styles.link} accessibilityRole="button" onPress={() => turnTo(!making)}>{making ? "Sign in" : "create an account with your email"}</Txt>
               .
             </Txt>
@@ -151,6 +181,7 @@ const styles = StyleSheet.create({
   fill: { flex: 1, backgroundColor: color.page },
   page: { flexGrow: 1, paddingHorizontal: space.xl, gap: space.xxl, width: "100%", maxWidth: 480, alignSelf: "center" },
   brand: { flexDirection: "row", alignItems: "center", gap: 10 },
+  apple: { height: 44, width: "100%" },
   link: { textDecorationLine: "underline" },
   or: { flexDirection: "row", alignItems: "center", gap: space.md, marginVertical: space.xs },
   rule: { flex: 1, height: 1, backgroundColor: color.line },

@@ -48,6 +48,7 @@ export default function Account() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const own = user?.provider === "password";
+  const other = user?.provider === "apple" ? "Apple" : "Google";
   const community = () => router.navigate("/community");
 
   async function remove() {
@@ -70,7 +71,7 @@ export default function Account() {
         <View style={{ gap: 2 }}>
           <Txt size={16} weight="semibold" tone="strong">{user?.name}</Txt>
           <Txt size={14} tone="muted">{user?.email}</Txt>
-          <Label style={{ marginTop: space.sm }}>{own ? "With an email and a password" : "With Google"}</Label>
+          <Label style={{ marginTop: space.sm }}>{own ? "With an email and a password" : `With ${other}`}</Label>
         </View>
         <Button title="Sign out" kind="ghost" onPress={() => void signOut()} style={{ marginTop: space.lg }} />
       </Section>
@@ -79,7 +80,7 @@ export default function Account() {
         {unread ? <View style={{ marginBottom: space.md }}><Notice text={unread} /></View> : null}
         <Row label="Name"><Value>{user?.name}</Value></Row>
         <Row label="Email"><Value>{user?.email}</Value></Row>
-        <Row label="Sign-in"><Value>{own ? "With this email and a password. We keep the password scrambled, never as you typed it." : "With Google. We keep no password."}</Value></Row>
+        <Row label="Sign-in"><Value>{own ? "With this email and a password. We keep the password scrambled, never as you typed it." : `With ${other}. We keep no password.`}</Value></Row>
         {kept ? (
           <>
             <Row label="Positions"><Value>{kept.portfolio.positions.map((x) => `${x.ticker} (${x.shares})`).join(", ") || "None"}</Value></Row>
