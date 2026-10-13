@@ -147,12 +147,16 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   la cuenta de Apple). La build 1 no los lleva.
 - **Capturas para el App Store** (2026-10-13): `store/app-store/screenshots/`, cinco. Cómo se
   repiten: `make sim` (la app de verdad, que habla con el portal de este equipo), instalada en
-  el simulador iPhone 18 Pro Max; el portal en local con precios de Yahoo y sin claves de pago
+  el simulador **iPhone 18 Pro** (1206 × 2622, el tamaño que pide el recuadro de App Store
+  Connect; las del Pro Max, 1320 × 2868, las rechaza); el portal en local con precios de Yahoo y sin claves de pago
   (`mobile-api-live` de `.claude/launch.json` del workspace); una cuenta local con una cartera
   variada; `xcrun simctl status_bar … override --time 9:41` y `xcrun simctl io … screenshot`.
   `simctl` las da con canal alfa y Apple no lo admite: se quitó con `sips`.
   Visto de paso: en el mapa de Watchlist, con muchas acciones, las etiquetas se pisan (COST y
   AAPL, LLY y AMZN); la captura va con solo las cuatro de la watchlist. Sin arreglar.
+  Y en la pantalla de entrada, con el teclado abierto en un iPhone de este tamaño, la marca
+  subía hasta pisar la hora: arreglado (el hueco de la barra de estado es del marco), para la
+  compilación siguiente a la build 3.
 - **Sin probar en el simulador** (2026-10-13; el teclado ya sí, arriba): **el teclado en pantalla** (el simulador escribe
   con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
   búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van

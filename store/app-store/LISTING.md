@@ -170,7 +170,7 @@ Market Hub cubre empresas cotizadas en Estados Unidos. La app está en inglés. 
 | Qué | Archivo o valor | Estado |
 |---|---|---|
 | Icono | El de la app (`assets/images/icon.png`, 1024 × 1024, sin transparencia): va dentro de la compilación | Hecho (`make icons`) |
-| Capturas de iPhone: de 1 a 10, PNG o JPEG sin transparencia | `store/app-store/screenshots/`: cinco PNG de 1320 × 2868 sin transparencia, del simulador **iPhone 18 Pro Max** (la pantalla grande, 6,9 pulgadas), que App Store Connect reduce para las demás: Overview, Analysis, Watchlist, la ficha de una acción y el mapa de Watchlist. Con precios de verdad (Yahoo, del 2026-10-13) y una cartera inventada, de una cuenta local ("Alex"); la hora, 9:41. Community no va: en local solo hay un par de carteras | Hecho (2026-10-13) |
+| Capturas de iPhone: de 1 a 10, PNG o JPEG sin transparencia | `store/app-store/screenshots/`: cinco PNG de **1206 × 2622** sin transparencia, del simulador **iPhone 18 Pro**. Es el tamaño del recuadro que App Store Connect enseña y exige, "iPhone with Dynamic Island (medium display)", que solo toma 1179 × 2556 o 1206 × 2622: las primeras se sacaron a 1320 × 2868 (Pro Max) y las rechazó por "File dimensions are invalid". Van en ese recuadro, no en "Header and Search Results", que es otro, opcional y de otro tamaño. Son: Overview, Analysis, Watchlist, la ficha de una acción y el mapa de Watchlist. Con precios de verdad (Yahoo, del 2026-10-13) y una cartera inventada, de una cuenta local ("Alex"); la hora, 9:41. Community no va: en local solo hay un par de carteras | Hecho (2026-10-13) |
 | Categoría | Finance | |
 | Copyright | `2026 <el nombre del titular de la cuenta>` | **Pendiente** |
 | Support URL | `https://themarkethub.app/contact/` | Hecho (2026-10-13) |

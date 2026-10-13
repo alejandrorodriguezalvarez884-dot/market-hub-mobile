@@ -107,8 +107,9 @@ export default function SignIn() {
   }
 
   return (
-    <View style={styles.fill}>
-      <ScrollView ref={scroll} contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xxl, paddingBottom: insets.bottom + space.xl }]}
+    // The inset is the frame's, not the content's: what scrolls goes out of sight at the status bar, not under it.
+    <View style={[styles.fill, { paddingTop: insets.top }]}>
+      <ScrollView ref={scroll} contentContainerStyle={[styles.page, { paddingTop: space.xxl, paddingBottom: insets.bottom + space.xl }]}
         keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" automaticallyAdjustKeyboardInsets onScroll={onScroll} scrollEventThrottle={16}>
         <Revealing value={reveal}>
         <View style={styles.brand}>
