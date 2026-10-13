@@ -32,10 +32,11 @@ type ScreenProps = PropsWithChildren<{ refreshing?: boolean; onRefresh?: () => v
 export function Screen({ children, refreshing = false, onRefresh, footer, headed = false }: ScreenProps) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={styles.fill}>
+    // The inset is the frame's, not the content's: what scrolls goes out of sight at the status bar, not under it.
+    <View style={[styles.fill, !headed && { paddingTop: insets.top }]}>
       <ScrollView
         style={styles.fill}
-        contentContainerStyle={[styles.screen, { paddingTop: headed ? space.lg : insets.top + space.lg }]}
+        contentContainerStyle={styles.screen}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
         refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={color.muted} /> : undefined}>
@@ -198,7 +199,7 @@ export function Track({ move, scale }: { move: number | null | undefined; scale:
 
 const styles = StyleSheet.create({
   fill: { flex: 1, backgroundColor: color.page },
-  screen: { paddingHorizontal: space.lg, paddingBottom: space.xxl, gap: space.xl, width: "100%", maxWidth: 640, alignSelf: "center" },
+  screen: { paddingHorizontal: space.lg, paddingTop: space.lg, paddingBottom: space.xxl, gap: space.xl, width: "100%", maxWidth: 640, alignSelf: "center" },
   row: { flexDirection: "row", alignItems: "center", gap: space.sm },
   sample: { borderWidth: 1, borderColor: "rgba(224, 179, 65, 0.4)", backgroundColor: color.warnSoft, borderRadius: 2, paddingHorizontal: 6, paddingVertical: 1 },
   section: { borderTopWidth: 1, borderTopColor: color.lineStrong, paddingTop: 14 },

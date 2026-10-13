@@ -71,7 +71,7 @@ function GroupRow({ it, first }: { it: Group; first: boolean }) {
     <View style={[styles.row, !first && styles.rowRule]}>
       <View style={styles.rowTop}>
         <View style={{ width: 132 }}>
-          <Txt size={14} weight="semibold" tone="strong" numberOfLines={1}>{it.label}</Txt>
+          <Txt size={14} weight="semibold" tone="strong" numberOfLines={2}>{it.label}</Txt>
           <Txt size={11} tone="muted">{it.count} position{it.count > 1 ? "s" : ""}</Txt>
         </View>
         <ShareBar weight={it.weight} />

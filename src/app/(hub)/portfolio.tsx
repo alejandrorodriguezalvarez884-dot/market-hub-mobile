@@ -74,9 +74,8 @@ export default function PortfolioScreen() {
       await api<Portfolio>("/api/portfolio", { method: "PUT", body: { positions: rows, watchlist } });
       setDirty(false);
       setSaid(null);
-      // Back to where the editor was opened from; the overview asks for its figures again.
-      if (router.canGoBack()) router.back();
-      else router.replace("/");
+      // To the overview, as the button says, wherever the editor was opened from; it asks for its figures again.
+      router.dismissTo("/");
     } catch (e) {
       setSaid({ text: message(e, "Saving failed."), error: true });
     } finally {
