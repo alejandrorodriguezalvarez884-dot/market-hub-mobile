@@ -60,6 +60,11 @@ export default function More() {
         <Line leaves icon="opinion" title="Opinion" onPress={() => openPage(`${SITE}/opinion/`)} />
         <Line leaves icon="media" title="Media" onPress={() => openPage(`${SITE}/media/`)} />
       </Section>
+
+      <Section title="Help">
+        <Line first leaves icon="account" title="Contact" note="Help, a comment or a member to report, or your data" onPress={() => openPage(`${SITE}/contact/`)} />
+        <Line leaves icon="opinion" title="Terms" onPress={() => openPage(`${SITE}/terms/`)} />
+      </Section>
     </Screen>
   );
 }
