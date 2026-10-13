@@ -16,8 +16,8 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 |---|---|---|---|
 | 1 | Apuntarse al Apple Developer Program (99 USD al año, como persona). Apple tarda en aprobarlo | Usuario | Pendiente |
 | 2 | `npx eas-cli@latest init` en este repo (crea el proyecto en Expo y escribe su id en `app.json`; ese cambio se commitea). En este Mac `eas-cli` ya tiene sesión | Usuario lo aprueba, agente lo lanza | Pendiente |
-| 3 | Decidir qué se hace con los comentarios (apartado 6, regla 1.2) y hacerlo | Usuario decide, agente lo hace | **Pendiente, bloquea el envío** |
-| 4 | Desplegar el portal con las rutas de "Sign in with Apple" (`make deploy` en `market-hub-landing`) | Agente, con permiso | Pendiente |
+| 3 | Publicar un contacto en el portal (apartado 6, regla 1.2, y la Support URL) | Usuario dice cuál, agente lo pone | **Pendiente, bloquea el envío** |
+| 4 | Desplegar el portal con las rutas de "Sign in with Apple" y con denunciar y bloquear (`make deploy` en `market-hub-landing`) | Agente, con permiso | Hecho (2026-10-13, revisión `market-hub-00035-w65`) |
 | 5 | Primera compilación de iPhone con EAS y subida a TestFlight. EAS pide entrar con la cuenta de Apple y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador | Usuario entra, agente lanza | Pendiente |
 | 6 | Probar en el iPhone, desde TestFlight: "Sign in with Apple" (no se puede probar antes: Expo Go no lleva el módulo), Google, el captcha al crear cuenta, el teclado, el icono y el arranque | Usuario | Pendiente |
 | 7 | Clave de "Sign in with Apple" (.p8) y revocar el token al borrar la cuenta (apartado 6) | Usuario crea la clave, agente escribe el código | Pendiente |
@@ -207,7 +207,7 @@ Sign in with the demo account above (email and password), or with Sign in with A
 
 Account deletion: More > Account and data > Delete my account. It deletes the account and everything kept about it at once.
 
-Members can write comments in Community > Monthly competition > Discussion. [Say here how a comment is reported and how a member is blocked, once that is in the app: see section 6.]
+Members can write comments in Community > Monthly competition > Discussion. Under every comment that is not your own there is "Report" and "Block". A reported comment is hidden from whoever reported it at once, and from everybody once two members have reported it, until we review it; we remove comments that break the rules. Blocking a member hides everything they write from you; More > Account and data lists who you blocked, with "Unblock". Comments with slurs or abusive language are not accepted. Contact: [the published contact address].
 ```
 
 ## 6. Las reglas de Apple que tocan a esta app
@@ -217,6 +217,6 @@ Members can write comments in Community > Monthly competition > Discussion. [Say
 | 4.8 Login Services | Quien ofrece el login de Google ofrece además, como opción equivalente, uno que solo recoja nombre y email y deje esconder el email | **Hecho** (2026-10-13): "Sign in with Apple", con el botón de Apple, encima del de Google. Sin probar hasta TestFlight |
 | 5.1.1(v) Borrar la cuenta | Borrarla entera desde la app, en un sitio fácil de encontrar | **Hecho**: More > Account and data > Delete my account |
 | Borrar una cuenta de Apple | "Apps that support Sign in with Apple should use the Sign in with Apple REST API to revoke user tokens" | **Pendiente** (paso 7): pide una clave .p8 de la cuenta de Apple. El portal tendría que guardar un token de Apple por cuenta, y eso se dice antes en la página de privacidad |
-| 1.2 User-Generated Content | Una app con contenido de usuarios lleva: un filtro de lo inaceptable, una forma de **denunciar** un contenido, poder **bloquear** a un usuario, y un contacto publicado | **Falta**: la discusión de la competición deja comentar, responder y borrar lo propio, y el dueño puede retirar comentarios, pero nadie puede denunciar ni bloquear. O se añade (portal, web y app), o la primera versión de iPhone sale sin la discusión. **Decisión del usuario** |
+| 1.2 User-Generated Content | Una app con contenido de usuarios lleva: un filtro de lo inaceptable, una forma de **denunciar** un contenido, poder **bloquear** a un usuario, y un contacto publicado | **Hecho** (2026-10-13) el filtro, "Report" y "Block", en portal, web y app; el dueño revisa lo denunciado en `/account/` de la web, y Apple espera respuesta pronta ("timely responses"): nada le avisa, tiene que mirarlo. **Falta el contacto publicado** |
 | 3.2.1(viii) Apps financieras | "Apps used for financial trading, investing, or money management should be submitted by the financial institution performing such services" | **Riesgo, no certeza**: la app no opera, no guarda dinero y no asesora, solo enseña cifras; pero un revisor puede leerla como "investing". Las notas para el revisor (apartado 5) lo dicen claro. Es el mismo riesgo que en Play con la cuenta personal |
 | 2.1 App completa | Versión final, sin textos de relleno, con cuenta de demostración y el servicio en marcha | Las capturas y la revisión se hacen contra el portal público, con cifras de verdad |
