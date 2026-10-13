@@ -206,9 +206,25 @@ The Market Hub cubre empresas cotizadas en Estados Unidos. La app está en ingl�
 Cloudflare ve la IP y datos del navegador para esa comprobación y el portal no guarda nada de
 ello; aquí no se ha marcado.
 
-**Clasificación por edades**: nada de violencia, sexo, lenguaje, drogas, apuestas con dinero ni
-contenido médico. A la pregunta sobre contenido creado por usuarios o mensajes entre ellos:
-**sí** (los comentarios de la competición). No está pensada para niños.
+**Puesto en App Store Connect el 2026-10-13** (borrador, sin publicar: "Publish" lo pulsa el
+usuario): la URL de la política y los cinco tipos de la tabla, cada uno con App Functionality,
+ligado al usuario y sin rastreo.
+
+**Clasificación por edades** (cuestionario de Apple, respondido el 2026-10-13; da **13+**):
+
+| Pregunta | Respuesta | Por qué |
+|---|---|---|
+| Parental Controls, Age Assurance | No | La app no tiene ninguno |
+| Unrestricted Web Access | No | La página de dentro de la app solo enseña las herramientas del portal; un enlace a otro sitio se abre en el navegador del teléfono |
+| User-Generated Content | **Sí** | Los comentarios de la competición y las carteras compartidas con un nombre |
+| Social Media | No | Es un hilo de comentarios entre miembros, no un feed que reparte contenido. **A juicio del usuario** |
+| Messaging and Chat | No | Los comentarios y sus respuestas son públicos para los miembros; no hay mensajes directos. **A juicio del usuario** |
+| Advertising | No | |
+| Lenguaje, terror, alcohol y drogas, médico, sexo, violencia | None / No | |
+| Simulated Gambling, Gambling, Loot Boxes | None / No | La competición es elegir una cartera, sin dinero ni premios |
+| Contests | **Frequent** | La competición mensual: los miembros compiten por una clasificación, y es una sección fija |
+
+Apple deja subirla a mano ("Override to Higher Age Rating"); no se tocó. No está pensada para niños.
 
 ## 5. App Review Information
 
