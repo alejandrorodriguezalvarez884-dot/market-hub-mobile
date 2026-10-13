@@ -22,7 +22,7 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 | 6 | Probar en el iPhone, desde TestFlight (la **build 2**, subida el 2026-10-13 con los arreglos del teclado): "Sign in with Apple" (no se puede probar antes: Expo Go no lleva el módulo), Google, el captcha al crear cuenta, el teclado, el icono y el arranque | Usuario | Pendiente |
 | 7 | Clave de "Sign in with Apple" (.p8) y revocar el token al borrar la cuenta (apartado 6) | Usuario crea la clave, agente escribe el código | Pendiente |
 | 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Usuario | Pendiente |
-| 9 | Capturas del simulador (apartado 3) | Agente | Pendiente |
+| 9 | Capturas del simulador (apartado 3) | Agente | **Hecho** (2026-10-13): cinco, en `store/app-store/screenshots/` |
 | 10 | Antes de enviar: vaciar `MARKETHUB_APP_REDIRECTS` en el portal y desplegar | Agente, con permiso | Pendiente |
 | 11 | Enviar a revisión. **Publicar es decisión del usuario, versión a versión** | Usuario | Pendiente |
 
@@ -160,7 +160,7 @@ Market Hub cubre empresas cotizadas en Estados Unidos. La app está en inglés. 
 | Qué | Archivo o valor | Estado |
 |---|---|---|
 | Icono | El de la app (`assets/images/icon.png`, 1024 × 1024, sin transparencia): va dentro de la compilación | Hecho (`make icons`) |
-| Capturas de iPhone: de 1 a 10, PNG o JPEG sin transparencia | Del simulador **iPhone 18 Pro Max** (la pantalla grande, 6,9 pulgadas: 1320 × 2868), que App Store Connect reduce para las demás: Overview, Analysis, Watchlist, la ficha de una acción, Community. Con cifras de verdad, no las de ejemplo | **Pendiente** |
+| Capturas de iPhone: de 1 a 10, PNG o JPEG sin transparencia | `store/app-store/screenshots/`: cinco PNG de 1320 × 2868 sin transparencia, del simulador **iPhone 18 Pro Max** (la pantalla grande, 6,9 pulgadas), que App Store Connect reduce para las demás: Overview, Analysis, Watchlist, la ficha de una acción y el mapa de Watchlist. Con precios de verdad (Yahoo, del 2026-10-13) y una cartera inventada, de una cuenta local ("Alex"); la hora, 9:41. Community no va: en local solo hay un par de carteras | Hecho (2026-10-13) |
 | Categoría | Finance | |
 | Copyright | `2026 <el nombre del titular de la cuenta>` | **Pendiente** |
 | Support URL | `https://themarkethub.app/contact/` | Hecho (2026-10-13) |
