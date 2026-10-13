@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="art.css">
+<!-- What stands for the app in a search, 3840 by 2560: what it is, said once, and the app itself
+     next to it (the screenshots of screenshots/, as they are). -->
+<style>
+  body { display: grid; grid-template-columns: 1.02fr 1fr; align-items: center; padding: 0 230px; column-gap: 120px; }
+  .brand { font-size: 104px; color: var(--ink); }
+  h1 { font-size: 248px; margin-top: 84px; }
+  .sub { font-size: 100px; margin-top: 70px; max-width: 14.5em; }
+  .shots { position: relative; height: 2560px; }
+  .shot { position: absolute; width: 960px; }
+  .shot.back { right: 0; top: 330px; }
+  .shot.front { left: 0; top: 150px; }
+</style>
+<body>
+  <div>
+    <div class="brand">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 2v16M4 10h8"/><circle cx="14.5" cy="10" r="2.75" fill="currentColor" stroke="none"/></svg>
+      <span>Market Hub</span>
+    </div>
+    <h1>Your stocks, described.</h1>
+    <p class="sub">A private page for your portfolio and the stocks you follow. It never tells you what to do.</p>
+  </div>
+  <div class="shots">
+    <img class="shot back" src="../screenshots/04-stock.png" alt="">
+    <img class="shot front" src="../screenshots/01-overview.png" alt="">
+  </div>
+</body>

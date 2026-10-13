@@ -12,7 +12,7 @@
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: help install start web api demo icons apk aab ipa testflight sim check
+.PHONY: help install start web api demo icons art apk aab ipa testflight sim check
 
 # The portal's repo, a sibling folder in the market-hub workspace.
 PORTAL ?= ../market-hub-landing
@@ -42,6 +42,9 @@ demo: ## Make the demo account (see scripts/seed-local.sh) on the portal `make a
 
 icons: ## Draw the app's icon, its Android layers, the launch screen's mark and Google Play's pictures again (scripts/draw-icons.mjs)
 	node scripts/draw-icons.mjs
+
+art: ## Draw the App Store's header and its search picture again, with Chrome (scripts/draw-store-art.sh)
+	./scripts/draw-store-art.sh
 
 # EAS builds in Expo's cloud, with the Expo account of whoever is logged in (`npx eas-cli@latest
 # login`, and `npx eas-cli@latest init` once). Each build is asked for here, by hand.

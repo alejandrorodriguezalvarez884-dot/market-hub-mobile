@@ -157,6 +157,12 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   Y en la pantalla de entrada, con el teclado abierto en un iPhone de este tamaño, la marca
   subía hasta pisar la hora: arreglado (el hueco de la barra de estado es del marco), para la
   compilación siguiente a la build 3.
+- **Cabecera e imagen de búsqueda del App Store** (2026-10-13): `store/app-store/art/`, dos
+  páginas HTML (`header.html`, `search.html`, con `art.css`) que Chrome pinta a PNG
+  (`make art`, `scripts/draw-store-art.sh`), con la tipografía de la app (`node_modules`) y sus
+  capturas. Son opcionales en App Store Connect. Apple no publica en su guía los márgenes que
+  recorta: el texto va al centro por eso, y cómo quedan en la tienda no se ha visto. Si se
+  repiten las capturas, `make art` después.
 - **Sin probar en el simulador** (2026-10-13; el teclado ya sí, arriba): **el teclado en pantalla** (el simulador escribe
   con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
   búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van

@@ -1,0 +1,12 @@
+/* The App Store's two pictures, drawn as the app is: the portal's page, its ink, its type. */
+@font-face { font-family: Plex; font-weight: 400; src: url("../../../node_modules/@expo-google-fonts/ibm-plex-sans/400Regular/IBMPlexSans_400Regular.ttf"); }
+@font-face { font-family: Plex; font-weight: 600; src: url("../../../node_modules/@expo-google-fonts/ibm-plex-sans/600SemiBold/IBMPlexSans_600SemiBold.ttf"); }
+@font-face { font-family: Plex; font-weight: 700; src: url("../../../node_modules/@expo-google-fonts/ibm-plex-sans/700Bold/IBMPlexSans_700Bold.ttf"); }
+:root { --page: #0b0c0d; --line: #222528; --line-strong: #3a3e42; --ink: #c9c7c1; --ink-strong: #f2f0ea; --muted: #8c8b86; --up: #35c98f; }
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 100%; height: 100%; background: var(--page); color: var(--ink-strong); font-family: Plex, sans-serif; overflow: hidden; }
+.brand { display: flex; align-items: center; gap: 0.36em; font-weight: 600; }
+.brand svg { height: 1.05em; width: 1.05em; }
+h1 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.04; }
+.sub { color: var(--muted); font-weight: 400; line-height: 1.3; }
+.shot { border-radius: 86px; border: 3px solid var(--line-strong); box-shadow: 0 60px 160px rgba(0, 0, 0, 0.6); display: block; }
