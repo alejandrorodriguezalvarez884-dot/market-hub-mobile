@@ -255,8 +255,13 @@ Para trabajar contra el portal de este equipo en vez del público:
     simulador el 2026-10-13). Tampoco en Android ni en la vista de navegador. Se prueba en una
     compilación: TestFlight, o `npx expo run:ios` en este Mac, que pide CocoaPods.
   - El portal solo toma tokens hechos para `app.themarkethub.hub`.
-  - **Pendiente**: revocar el token de Apple al borrar la cuenta (pide una
-    clave de la cuenta de Apple Developer); y una cuenta de Apple no tiene cómo entrar en la web.
+  - **Borrar una cuenta de Apple** (2026-10-13; `tellAppleBeforeDeleting` en `lib/apple.ts`): el
+    iPhone pide confirmar con Apple otra vez y lo que da va al portal, que hace que Apple revoque
+    el token (`market-hub-landing/src/markethub/applerevoke.py`). No se guarda nada. Si el usuario
+    cierra la hoja de Apple, no se borra nada y se le dice; si Apple o el portal no pueden, la
+    cuenta se borra igual. Solo se hace si el portal dice `apple_revocation`. Va en la build 4.
+    **Sin probar**: pide una cuenta de Apple de verdad y la clave del desarrollador en el portal.
+  - **Pendiente**: una cuenta de Apple no tiene cómo entrar en la web.
 - **Denunciar y bloquear** (2026-10-13; `components/thread.tsx`, `lib/community.ts`): cada
   comentario ajeno lleva "Report" y "Block", con su confirmación. Denunciado o bloqueado, deja de
   verse. En Account and data, la fila "Blocked" enseña a quién se bloqueó, con "Unblock". Lo

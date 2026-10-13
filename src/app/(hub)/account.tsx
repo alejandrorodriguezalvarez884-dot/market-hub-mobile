@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, View, type TextInput } from "react-native";
 
 import { Button, Field, Label, Notice, Screen, Section, Txt } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
+import { tellAppleBeforeDeleting } from "@/lib/apple";
 import { blocked, unblock, type Blocked, type Entry } from "@/lib/community";
 import { confirm } from "@/lib/confirm";
 import { openPage } from "@/lib/hub";
@@ -63,6 +64,11 @@ export default function Account() {
     setDeleting(true);
     setError(null);
     try {
+      // An Apple account: the phone asks once more, so that Apple stops listing the app for it.
+      if (user?.provider === "apple" && (await tellAppleBeforeDeleting()) === "cancelled") {
+        setError("Nothing was deleted. To delete your account, confirm with Apple when the phone asks.");
+        return setDeleting(false);
+      }
       await api("/api/me", { method: "DELETE" });
       await signOut();
     } catch (e) {
@@ -128,7 +134,7 @@ export default function Account() {
 
       {own ? <NewPassword /> : null}
 
-      <Section title="Delete account" note="Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition, empties the comments you wrote and drops your reports and your blocks. Signing in again later starts from zero.">
+      <Section title="Delete account" note={`Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition, empties the comments you wrote and drops your reports and your blocks. Signing in again later starts from zero.${user?.provider === "apple" ? " Your iPhone asks you to confirm with Apple first, so that Apple stops listing the app under your Apple account." : ""}`}>
         {error ? <View style={{ marginBottom: space.md }}><Notice text={error} /></View> : null}
         <Button title="Delete my account" kind="danger" onPress={remove} busy={deleting} />
       </Section>
