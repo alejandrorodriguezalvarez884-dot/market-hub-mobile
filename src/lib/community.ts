@@ -27,11 +27,21 @@ export const getCompetition = () => api<Competition>("/api/competitions");
 export const sendEntry = (handle: string, picks: { ticker: string; weight: number }[]) => api<Entry>("/api/competitions/entry", { method: "PUT", body: { handle, picks } });
 export const withdrawEntry = () => api<{ withdrawn: boolean }>("/api/competitions/entry", { method: "DELETE" });
 
-export type Comment = { id: string; parent_id: string | null; depth: number; created_utc: string; deleted: boolean; name: string; text: string; mine: boolean };
+// `hidden` says why a comment that is there is not shown to this reader: they blocked its author,
+// they reported it, or it is held until the owner has looked at it.
+export type Comment = { id: string; parent_id: string | null; depth: number; created_utc: string; deleted: boolean; name: string; text: string; mine: boolean;
+  hidden?: "blocked" | "reported" | "held" | null };
+export type Blocked = { key: string; name: string; since_utc: string };
 export type Thread = { comments: Comment[]; signed_in: boolean; moderator: boolean };
 export const monthThread = (month: string) => api<Thread>(`/api/competitions/comments?month=${encodeURIComponent(month)}`);
 export const monthComment = (month: string, text: string, parent_id: string | null) => api<Comment>("/api/competitions/comments", { method: "POST", body: { month, text, parent_id } });
 export const removeComment = (id: string) => api<{ deleted: boolean }>(`/api/opinion/comments/${encodeURIComponent(id)}`, { method: "DELETE" });
+// Say a comment should not be there, or stop seeing what its author writes. The author is named
+// by the comment: the app never has anybody's account id.
+export const reportComment = (id: string) => api<{ reported: boolean }>(`/api/comments/${encodeURIComponent(id)}/report`, { method: "POST" });
+export const blockAuthor = (comment_id: string) => api<{ blocked: boolean }>("/api/blocks", { method: "POST", body: { comment_id } });
+export const blocked = () => api<{ blocked: Blocked[] }>("/api/blocks");
+export const unblock = (key: string) => api<{ unblocked: boolean }>(`/api/blocks/${encodeURIComponent(key)}`, { method: "DELETE" });
 
 // A name for a line whose member is gone.
 export const who = (l: { handle: string }) => l.handle || "Former member";

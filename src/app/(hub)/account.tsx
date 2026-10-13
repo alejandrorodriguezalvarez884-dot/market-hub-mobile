@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, View, type TextInput } from "react-native";
 
 import { Button, Field, Label, Notice, Screen, Section, Txt } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
-import type { Entry } from "@/lib/community";
+import { blocked, unblock, type Blocked, type Entry } from "@/lib/community";
 import { confirm } from "@/lib/confirm";
 import { openPage } from "@/lib/hub";
 import { useLoad } from "@/lib/load";
@@ -15,17 +15,18 @@ import { color, space } from "@/lib/theme";
 import type { Portfolio, Sharing } from "@/lib/types";
 
 type Mine = { id: string; slug: string; text: string; created_utc: string };
-type Kept = { portfolio: Portfolio; sharing: Sharing; entries: Entry[]; comments: Mine[] };
+type Kept = { portfolio: Portfolio; sharing: Sharing; entries: Entry[]; comments: Mine[]; blocked: Blocked[] };
 
 // What is saved now. The portfolio has to come; the rest is shown as empty if it does not.
 async function getKept(): Promise<Kept> {
-  const [portfolio, sharing, played, said] = await Promise.all([
+  const [portfolio, sharing, played, said, hidden] = await Promise.all([
     api<Portfolio>("/api/portfolio"),
     api<Sharing>("/api/sharing").catch(() => ({ enabled: false, handle: "", since_utc: null })),
     api<{ entries: Entry[] }>("/api/competitions/mine").catch(() => ({ entries: [] })),
     api<{ comments: Mine[] }>("/api/opinion/mine").catch(() => ({ comments: [] })),
+    blocked().catch(() => ({ blocked: [] })),
   ]);
-  return { portfolio, sharing, entries: played.entries, comments: said.comments };
+  return { portfolio, sharing, entries: played.entries, comments: said.comments, blocked: hidden.blocked };
 }
 
 const month = (m: string) => new Date(`${m}-01T00:00:00Z`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -44,12 +45,17 @@ const Value = ({ children }: { children: ReactNode }) => <Txt size={13.5} tone="
 export default function Account() {
   const { user, signOut } = useSession();
   const router = useRouter();
-  const { data: kept, error: unread } = useLoad(getKept);
+  const { data: kept, error: unread, refresh } = useLoad(getKept);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const own = user?.provider === "password";
   const other = user?.provider === "apple" ? "Apple" : "Google";
   const community = () => router.navigate("/community");
+
+  async function allow(key: string) {
+    await unblock(key).catch(() => {});
+    refresh();
+  }
 
   async function remove() {
     const sure = await confirm("Delete your account?", "Your positions, your watchlist, what you share in Community, your entries to the competition and your comments are deleted for good. This cannot be undone.", "Delete");
@@ -104,6 +110,17 @@ export default function Account() {
                 </Pressable>
               ))}
             </Row>
+            {kept.blocked.length ? (
+              <Row label="Blocked">
+                <Value>You do not see their comments. They are not told.</Value>
+                {kept.blocked.map((b) => (
+                  <View key={b.key} style={styles.blocked}>
+                    <Txt size={13.5} tone="strong" style={{ flex: 1 }} numberOfLines={1}>{b.name || "A member"}</Txt>
+                    <Txt size={13} tone="muted" style={styles.link} accessibilityRole="button" onPress={() => allow(b.key)}>Unblock</Txt>
+                  </View>
+                ))}
+              </Row>
+            ) : null}
           </>
         ) : unread ? null : <View style={styles.waiting} accessibilityLabel="Loading" />}
         <Button title="Read the privacy page" kind="ghost" onPress={() => openPage(`${SITE}/privacy/`)} style={{ marginTop: space.lg }} />
@@ -111,7 +128,7 @@ export default function Account() {
 
       {own ? <NewPassword /> : null}
 
-      <Section title="Delete account" note="Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition and empties the comments you wrote. Signing in again later starts from zero.">
+      <Section title="Delete account" note="Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition, empties the comments you wrote and drops your reports and your blocks. Signing in again later starts from zero.">
         {error ? <View style={{ marginBottom: space.md }}><Notice text={error} /></View> : null}
         <Button title="Delete my account" kind="danger" onPress={remove} busy={deleting} />
       </Section>
@@ -163,6 +180,7 @@ function NewPassword() {
 }
 
 const styles = StyleSheet.create({
+  blocked: { flexDirection: "row", alignItems: "center", gap: space.md },
   row: { flexDirection: "row", gap: space.md, paddingVertical: 7 },
   rowLabel: { width: 104, lineHeight: 19 },
   link: { textDecorationLine: "underline" },
