@@ -21,7 +21,7 @@ Las reglas de Apple citadas aquí se leyeron en su web el 2026-10-13.
 | 5 | Primera compilación de iPhone con EAS (`make ipa`) y subida a TestFlight (`make testflight`). EAS pide entrar con la cuenta de Apple en la terminal y crea el certificado y el perfil, con "Sign in with Apple" activado en el identificador. Puede que la app tenga que existir antes en App Store Connect (paso 8) | Usuario, en su terminal | **Hecho** (2026-10-13): versión 1.0.0, build 1, subida a App Store Connect (app `6822290220`). EAS creó la app allí con el nombre de `app.json`, "Market Hub", que estaba cogido: quedó como "Market Hub (0f4413)" y el usuario lo cambió ese día en App Store Connect por **"The Market Hub"**, con categoría Finance (apartado 2). La clave de la API de App Store Connect la generó EAS con rol ADMIN y la guarda en sus servidores; basta APP_MANAGER, y se cambia en Users and Access > Integrations. Grupo de TestFlight "Team (Expo)" |
 | 6 | Probar en el iPhone, desde TestFlight (la **build 2**, subida el 2026-10-13 con los arreglos del teclado): "Sign in with Apple" (no se puede probar antes: Expo Go no lleva el módulo), Google, el captcha al crear cuenta, el teclado, el icono y el arranque | Usuario | Pendiente |
 | 7 | Clave de "Sign in with Apple" (.p8) y revocar el token al borrar la cuenta (apartado 6) | Usuario crea la clave, agente escribe el código | Pendiente |
-| 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Usuario | Pendiente |
+| 8 | Crear la app en App Store Connect y rellenar la ficha (apartados 2 y 3), la privacidad (4) y la revisión (5) | Agente deja los campos, usuario guarda | **A medias** (2026-10-13): en la página de la versión quedaron puestos el texto promocional, la descripción, las palabras clave, las dos URL, la versión (1.0.0), el copyright y las notas al revisor. **Faltan**: las credenciales y el contacto del revisor, subir las capturas, elegir la build, guardar; y después App Privacy, la clasificación por edades, y precio y países |
 | 9 | Capturas del simulador (apartado 3) | Agente | **Hecho** (2026-10-13): cinco, en `store/app-store/screenshots/` |
 | 10 | Antes de enviar: vaciar `MARKETHUB_APP_REDIRECTS` en el portal y desplegar | Agente, con permiso | Pendiente |
 | 11 | Enviar a revisión. **Publicar es decisión del usuario, versión a versión** | Usuario | Pendiente |
@@ -78,6 +78,11 @@ WATCHLIST
 • A chart per stock, as candles or as a line, with its 20, 50 and 200-day averages and volume
 • A reading of each stock, aspect by aspect: trend, momentum, 52-week range, volume, what analysts estimate and its valuation
 • All your stocks on one map
+
+ANALYSIS TOOLS
+• Fundamentals Lab: every number of a company, its valuation against its own history and its technical picture
+• Earnings Radar: what a company's latest results release says
+• Peer Map and Playground: a company next to its peers, and a board of charts and tables put together by asking for it
 
 COMMUNITY
 • Share your portfolio's mix if you choose to: tickers and weights only, under a name you pick. Never your name, your amounts or what you paid
@@ -142,6 +147,11 @@ SEGUIMIENTO
 • Una lectura de cada acción, aspecto por aspecto: tendencia, impulso, rango de 52 semanas, volumen, lo que estiman los analistas y su valoración
 • Todas tus acciones en un mapa
 
+HERRAMIENTAS DE ANÁLISIS
+• Fundamentals Lab: todas las cifras de una empresa, su valoración frente a su propia historia y su cuadro técnico
+• Earnings Radar: lo que dice el último comunicado de resultados de una empresa
+• Peer Map y Playground: una empresa junto a sus comparables, y un tablero de gráficos y tablas que se compone pidiéndolo
+
 COMUNIDAD
 • Comparte la composición de tu cartera si quieres: solo tickers y pesos, con el nombre que elijas. Nunca tu nombre, tus importes ni lo que pagaste
 • Una competición mensual entre miembros, con su clasificación y su debate
@@ -195,7 +205,8 @@ contenido médico. A la pregunta sobre contenido creado por usuarios o mensajes 
 ## 5. App Review Information
 
 - **Sign-in required**: sí. Apple pide una **cuenta de demostración** (regla 2.1): una de email y
-  contraseña creada en themarkethub.app, con una cartera pequeña ya puesta. Sus datos se escriben
+  contraseña creada en themarkethub.app, con una cartera pequeña ya puesta. **Creada por el
+  usuario el 2026-10-13** ("Demo user"), con cinco posiciones y tres acciones en la watchlist. Sus datos se escriben
   en App Store Connect, **no en este repo**. El portal tiene que estar en marcha durante la
   revisión.
 - **Contacto**: nombre, teléfono y email del usuario, en App Store Connect.
@@ -204,7 +215,7 @@ contenido médico. A la pregunta sobre contenido creado por usuarios o mensajes 
 ```
 Market Hub is the phone version of the private area of https://themarkethub.app. It shows the stocks a user types in (tickers, number of shares, average cost) valued at market prices from third-party data providers, and describes them. It gives no advice, makes no predictions, does not connect to any broker and cannot place orders or move money.
 
-Sign in with the demo account above (email and password), or with Sign in with Apple or Google. The demo account already has a small portfolio and a watchlist.
+Sign in with the demo account above (email and password). Sign in with Apple and with Google also work. The demo account already has a small portfolio and a watchlist.
 
 The analysis tools under More (Fundamentals Lab, Earnings Radar, Peer Map, Playground) are our own web tools, shown inside the app and signed in with the same account; everything else in the app is native.
 
