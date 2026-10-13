@@ -1,6 +1,6 @@
 # Estado del proyecto y cómo continuar
 
-Última actualización: 2026-10-08.
+Última actualización: 2026-10-13.
 
 ## Qué se pidió
 
@@ -14,13 +14,13 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 |---|---|---|
 | 1 | Repo `market-hub-mobile` con Expo y TypeScript, submódulo del workspace | Hecho (repo público en GitHub, submódulo de `market-hub`) |
 | 2 | Sesión por token en la API del portal, con sus tests | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00023-q6q`) |
-| 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho y probado en la vista de navegador; **falta probarlo en un teléfono** |
+| 3 | Entrar con email y contraseña, Overview y Portfolio, probados en el móvil con Expo Go | Hecho; probado en la vista de navegador y, el 2026-10-13, en el simulador de iPhone |
 | 3b | Entrar con Google desde la app, por el navegador del teléfono | Hecho y **desplegado** (2026-10-07, revisión `market-hub-00025-gj8`; la URI de vuelta ya está en el cliente OAuth). **Falta** que el usuario lo pruebe en el teléfono |
 | 4a | Crear cuenta con email desde la app, con el captcha en un WebView | Hecho (2026-10-08), probado en la vista de navegador sin captcha, y el portal **desplegado** (revisión `market-hub-00027-wcg`). **Falta probar el captcha en un teléfono** |
 | 4b | Icono y pantalla de arranque de Market Hub | Hecho (2026-10-08); se ven en una compilación, no en Expo Go |
 | 4c | Identificadores y configuración de EAS | Hecho (2026-10-08): `app.themarkethub.hub` en las dos plataformas, `eas.json`, `make apk` y `make aab`. **Falta** que el usuario haga `eas login` y `eas init` |
 | 4d | Login con Apple; compilación de desarrollo con EAS | Pendiente (pide la cuenta de Apple; el usuario aún no la tiene, 2026-10-08) |
-| 5 | Analysis, Watchlist y Community | Hecho (2026-10-07) y probado en la vista de navegador; **falta verlo en un teléfono** |
+| 5 | Analysis, Watchlist y Community | Hecho (2026-10-07); probado en la vista de navegador y, el 2026-10-13, en el simulador de iPhone |
 | 5b | Lo que la web tenía y la app no: noticias en Overview, volumen en la ficha, lo guardado y cambiar contraseña en Account | Hecho (2026-10-08) y probado en la vista de navegador |
 | 6a | Google Play: ficha, gráficos, formularios y privacidad | **En espera** (decisión del usuario, 2026-10-08): no tiene teléfono Android, y Google lo exige para verificar una cuenta personal nueva; también hace falta para instalar el APK y sacar las capturas. Se retoma cuando tenga uno. Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. La página de privacidad del portal ya lo dice, desplegada. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción) y las capturas |
 | 6b | TestFlight | Pendiente |
@@ -105,15 +105,36 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   cuenta vacía y con la de demostración, cambiar la contraseña (actual equivocada: mensaje y la
   sesión sigue; buena: cambia), el volumen bajo el gráfico de AAPL, y las noticias en Overview
   (con las de ejemplo, quitando un momento el filtro que las esconde).
+- **Comprobado del 2026-10-13, en el simulador de iPhone** (iPhone 18 Pro, iOS 27, Xcode 27, con
+  Expo Go, contra el portal en local con cifras de ejemplo y la cuenta de demostración; lo abre
+  la configuración `mobile-ios` de `.claude/launch.json` del workspace, con `mobile-api`
+  arrancado antes). Entrar con email y contraseña (campos vacíos: el aviso), Overview, Analysis,
+  Watchlist en lista y en mapa, la ficha de una acción con velas a 6 meses y a 2 años, buscar
+  otra acción ("Look") y seguirla ("Follow", guardado en el portal), compartir la cartera con un
+  nombre, la competición entera, armar una apuesta de tres acciones, mover un peso, enviarla y
+  retirarla, comentar y borrar el comentario, More, el editor de la cartera (añadir, poner
+  acciones, guardar, quitar), Account con lo guardado, y cambiar la contraseña con la actual
+  equivocada (el mensaje sale y la sesión sigue). Cerrar Metro y volver a abrir la app: sigue
+  dentro. Tres fallos que solo se veían en nativo, arreglados ese día:
+  - al desplazar una pestaña, el contenido pasaba por debajo de la hora y la batería (`Screen`
+    en `components/ui.tsx`: el hueco de la barra de estado es del marco, no del contenido);
+  - "Save and open the overview" volvía a la pantalla desde la que se abrió el editor (More,
+    por ejemplo) en vez de a Overview (`router.dismissTo("/")`);
+  - en Analysis un sector largo ("Consumer Defensive") salía cortado: ahora ocupa dos líneas.
+  Los cinco paquetes de Expo que iban un parche por detrás del SDK 57 se subieron
+  (`npx expo install --fix`); `make check` en verde, 21 de 21.
+- **Sin probar en el simulador** (2026-10-13): **el teclado en pantalla** (el simulador escribe
+  con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
+  búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van
+  contra el portal público y los teclea el usuario), borrar la cuenta, y el icono y el arranque
+  (Expo Go enseña los suyos; hace falta una compilación, y para hacerla en local, CocoaPods).
 - **Sin probar del 2026-10-08**: **el captcha en el WebView** (solo existe en el teléfono y contra
   un portal con Turnstile, o sea el público ya desplegado), las noticias con titulares de verdad
   y su marca de tono, y el icono y el arranque en un teléfono (Expo Go enseña los suyos).
-- **Sin probar**: **nada de lo anterior en un teléfono** (el usuario sí vio en su iPhone, con
-  Expo Go, el primer tramo y el login con Google): gestos, teclado, zonas seguras y rendimiento
-  del gráfico de velas a dos años. Tampoco: enviar o retirar la apuesta, compartir la cartera,
-  comentar y borrar comentarios (las rutas están cubiertas por los tests del portal, pero no se
-  pulsaron los botones), "Follow" desde Watchlist, y las frases del modelo (en local no hay
-  clave). Borrar la cuenta desde la pantalla.
+- **Sin probar en un teléfono de verdad**: casi todo (el usuario sí vio en su iPhone, con Expo
+  Go, el primer tramo y el login con Google). El simulador va con la potencia del Mac: el
+  rendimiento del gráfico de velas a dos años hay que verlo en el teléfono. Tampoco las frases
+  del modelo (en local no hay clave).
 - **Lo que la web tiene y la app todavía no**: en Overview, las tarjetas de herramientas (están
   en More); en Watchlist, el muro de varias gráficas a la vez y la tabla ordenable (en un móvil
   hay una gráfica por pantalla); en Account, descargar los datos en JSON.
