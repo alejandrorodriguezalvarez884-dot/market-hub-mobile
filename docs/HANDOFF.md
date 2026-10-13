@@ -23,7 +23,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 5 | Analysis, Watchlist y Community | Hecho (2026-10-07); probado en la vista de navegador y, el 2026-10-13, en el simulador de iPhone |
 | 5b | Lo que la web tenía y la app no: noticias en Overview, volumen en la ficha, lo guardado y cambiar contraseña en Account | Hecho (2026-10-08) y probado en la vista de navegador |
 | 6a | Google Play: ficha, gráficos, formularios y privacidad | **En espera** (decisión del usuario, 2026-10-08): no tiene teléfono Android, y Google lo exige para verificar una cuenta personal nueva; también hace falta para instalar el APK y sacar las capturas. Se retoma cuando tenga uno. Preparado (2026-10-08) en `store/google-play/LISTING.md`, que lleva los pasos y quién hace cada uno. La página de privacidad del portal ya lo dice, desplegada. **Faltan** la cuenta de Play (personal: 12 testers 14 días antes de producción) y las capturas |
-| 6b | App Store y TestFlight | Preparado (2026-10-13) en `store/app-store/LISTING.md`: pasos, textos, etiquetas de privacidad, notas para el revisor y las reglas de Apple que tocan a la app. La regla 1.2 está hecha desde ese mismo día: denunciar, bloquear, y el contacto publicado (`themarkethub.app/contact/`, que la app enlaza desde More > Help a partir de la build 2). **Cuenta de Apple Developer**: activa desde el 2026-10-14 (como persona, Team ID `J44H9U6HLW`; la app saldrá bajo el nombre legal del usuario). **Primera compilación** (2026-10-13): 1.0.0, build 1, hecha con `make ipa` y subida con `make testflight` a App Store Connect (app `6822290220`, en `eas.json`). En la tienda se llama **"The Market Hub"** ("Market Hub" estaba cogido), con el subtítulo "AI-based portfolio tracker" y la categoría Finance, puestos por el usuario en App Store Connect; bajo el icono sigue siendo "Market Hub". **Falta probarla en el iPhone desde TestFlight** y las capturas |
+| 6b | App Store y TestFlight | Preparado (2026-10-13) en `store/app-store/LISTING.md`: pasos, textos, etiquetas de privacidad, notas para el revisor y las reglas de Apple que tocan a la app. La regla 1.2 está hecha desde ese mismo día: denunciar, bloquear, y el contacto publicado (`themarkethub.app/contact/`, que la app enlaza desde More > Help a partir de la build 2). **Cuenta de Apple Developer**: activa desde el 2026-10-14 (como persona, Team ID `J44H9U6HLW`; la app saldrá bajo el nombre legal del usuario). **Primera compilación** (2026-10-13): 1.0.0, build 1, hecha con `make ipa` y subida con `make testflight` a App Store Connect (app `6822290220`, en `eas.json`). En la tienda se llama **"The Market Hub"** ("Market Hub" estaba cogido), con el subtítulo "AI-based portfolio tracker" y la categoría Finance, puestos por el usuario en App Store Connect; bajo el icono sigue siendo "Market Hub". La **build 2** (el teclado y More > Help) se subió ese mismo día. **Falta probarla en el iPhone desde TestFlight** y las capturas |
 
 ## Dónde estamos
 
@@ -137,8 +137,10 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
   - en la pantalla de entrada el teclado tapaba medio campo de la contraseña y el botón: el
     `KeyboardAvoidingView` no hacía nada ahí, y se cambió por lo mismo que usan las demás;
   - nada quitaba el teclado, que tapa las pestañas: ahora se va al arrastrar la página.
-  Los arreglos se vieron en Expo Go (búsqueda, comentario y entrada); **no están en la build 1
-  de TestFlight**: van en la siguiente.
+  Los arreglos se vieron en Expo Go (búsqueda, comentario, entrada y cambiar la contraseña) y
+  van, con More > Help, en la **build 2** (1.0.0, subida a App Store Connect ese mismo día con
+  `eas build --auto-submit --non-interactive`: con las credenciales ya guardadas en EAS no pide
+  la cuenta de Apple). La build 1 no los lleva.
 - **Sin probar en el simulador** (2026-10-13; el teclado ya sí, arriba): **el teclado en pantalla** (el simulador escribe
   con el teclado del Mac y no lo saca: falta ver que no tape el campo ni los resultados de una
   búsqueda al pie de la pantalla, como la de Watchlist), el captcha y el login con Google (van
