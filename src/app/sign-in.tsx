@@ -114,7 +114,7 @@ export default function SignIn() {
         <Revealing value={reveal}>
         <View style={styles.brand}>
           <Logo size={22} />
-          <Txt size={17} weight="semibold" tone="strong">Market Hub</Txt>
+          <Txt size={17} weight="semibold" tone="strong">The Market Hub</Txt>
         </View>
 
         <View style={{ gap: space.sm }}>
