@@ -27,8 +27,12 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 ## Dónde estamos
 
-- **2026-10-15: la ficha de valor del portal, en la app, y Options Lab** (a petición del usuario; **sin
-  compilar ni publicar**: va en la próxima build que el usuario decida). La pantalla de una acción
+- **2026-10-15: la ficha de valor del portal, en la app, y Options Lab** (a petición del usuario).
+  **Versión 1.1.0, build 5, compilada y subida a App Store Connect para TestFlight** el mismo día
+  (`eas build --platform ios --profile production --auto-submit` desde Windows con `npx.cmd`, porque
+  PowerShell no deja correr `npx.ps1`; el usuario entró en EAS y en su cuenta de Apple, con el código
+  de dos pasos, en la terminal). **No se ha enviado a revisión**: eso lo decide el usuario. La 1.1.0
+  porque la 1.0.0 (build 4) estaba en revisión. Build de EAS `2d7de5cf-3026-49c6-9d3c-149c9b2ce39f`. La pantalla de una acción
   o un fondo (`stock/[ticker].tsx`) lleva, debajo de "How it stands", lo nuevo de `/quote/` del
   portal (`components/quote-more.tsx`, de `GET /api/public/quote/more`): frente al S&P 500 (1, 3
   y 5 años), año a año, caídas desde máximos con volatilidad, beta y mejor/peor día; para una
