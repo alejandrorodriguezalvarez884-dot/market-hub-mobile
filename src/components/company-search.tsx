@@ -1,5 +1,5 @@
 // The search box: a ticker or a company's name. The suggestions are the portal's (the SEC's list
-// of companies listed in the US); choosing one hands it to the screen.
+// of companies listed in the US, and the US funds the provider finds); choosing one hands it to the screen.
 import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -23,7 +23,7 @@ export function CompanySearch({ label, onPick, action = "Add" }: { label: string
     // Asked once the typing pauses, and only the last answer is kept.
     const timer = setTimeout(() => {
       api<{ companies: Company[] }>(`/api/search?q=${encodeURIComponent(asked)}`)
-        .then((r) => alive && setAnswer({ to: asked, found: r.companies.slice(0, 6), note: r.companies.length ? null : `No company matches "${asked}".` }))
+        .then((r) => alive && setAnswer({ to: asked, found: r.companies.slice(0, 6), note: r.companies.length ? null : `No company or fund matches "${asked}".` }))
         .catch((e) => alive && setAnswer({ to: asked, found: [], note: message(e, "The search is not answering.") }));
     }, 220);
     return () => {
@@ -49,17 +49,17 @@ export function CompanySearch({ label, onPick, action = "Add" }: { label: string
     <View>
       <View style={styles.box}>
         <Icon name="search" size={18} />
-        <Field accessibilityLabel={label} placeholder="Company or ticker: Apple, MSFT, SPY…" value={q} onChangeText={setQ} 
+        <Field accessibilityLabel={label} placeholder="Company, fund or ticker: Apple, MSFT, VOO…" value={q} onChangeText={setQ} 
           returnKeyType="search" onSubmitEditing={() => found[0] && pick(found[0])} style={styles.input} />
       </View>
       <View ref={under} collapsable={false}>
       {found.length ? (
         <View style={styles.list} accessibilityRole="list">
           {found.map((c, i) => (
-            <Pressable key={c.ticker} onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`${action} ${c.ticker}, ${tidyName(c.name)}`}
+            <Pressable key={c.ticker} onPress={() => pick(c)} accessibilityRole="button" accessibilityLabel={`${action} ${c.ticker}, ${tidyName(c.name)}${c.kind ? `, ${c.kind}` : ""}`}
               style={({ pressed }) => [styles.item, i > 0 && styles.itemRule, pressed && { backgroundColor: color.raised }]}>
               <Txt size={14} weight="semibold" tone="strong" style={{ width: 64 }}>{c.ticker}</Txt>
-              <Txt size={13} tone="muted" numberOfLines={1} style={{ flex: 1 }}>{tidyName(c.name)}</Txt>
+              <Txt size={13} tone="muted" numberOfLines={1} style={{ flex: 1 }}>{c.kind ? `${tidyName(c.name)} · ${c.kind}` : tidyName(c.name)}</Txt>
               <Txt size={13} tone="strong">{action}</Txt>
             </Pressable>
           ))}

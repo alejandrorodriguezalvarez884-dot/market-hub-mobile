@@ -1,10 +1,12 @@
-// One stock: its chart, with its 20, 50 and 200-day averages, and its reading, aspect by aspect.
+// One stock or fund: its chart, with its 20, 50 and 200-day averages, its reading, aspect by aspect,
+// and below it what the portal's quote page shows (components/quote-more.tsx).
 import { Stack } from "expo-router/stack";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { PriceChart } from "@/components/price-chart";
+import { QuoteMoreSections } from "@/components/quote-more";
 import { ReadingCard, StateMarks } from "@/components/reading";
 import { Button, Notice, Screen, Section, Txt, Waiting, WordTabs } from "@/components/ui";
 import { message } from "@/lib/api";
@@ -69,6 +71,8 @@ export default function Stock() {
           <Section title="How it stands">
             <ReadingCard item={item} index={index} />
           </Section>
+
+          <QuoteMoreSections ticker={item.ticker} />
 
           <Button title={`Open ${item.ticker} on themarkethub.app`} kind="ghost" onPress={() => openQuote(item.ticker)} />
         </>

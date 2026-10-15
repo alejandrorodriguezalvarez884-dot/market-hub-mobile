@@ -1,6 +1,6 @@
 # Estado del proyecto y cómo continuar
 
-Última actualización: 2026-10-13 (noche).
+Última actualización: 2026-10-15.
 
 ## Qué se pidió
 
@@ -26,6 +26,23 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 6b | App Store y TestFlight | **Enviada a revisión** por el usuario el 2026-10-13 a las 20:50: versión 1.0.0, **build 4**, estado "Waiting for Review". Si Apple la aprueba, sale sola a la tienda (decisión del usuario). Todo lo que se puso en la ficha y por qué está en `store/app-store/LISTING.md`. Si la rechaza, el motivo llega al correo del usuario y a App Store Connect (App Review) |
 
 ## Dónde estamos
+
+- **2026-10-15: la ficha de valor del portal, en la app, y Options Lab** (a petición del usuario; **sin
+  compilar ni publicar**: va en la próxima build que el usuario decida). La pantalla de una acción
+  o un fondo (`stock/[ticker].tsx`) lleva, debajo de "How it stands", lo nuevo de `/quote/` del
+  portal (`components/quote-more.tsx`, de `GET /api/public/quote/more`): frente al S&P 500 (1, 3
+  y 5 años), año a año, caídas desde máximos con volatilidad, beta y mejor/peor día; para una
+  empresa, ingresos y beneficio (años o trimestres), la empresa y sus cifras; para un fondo, top
+  posiciones (cada una abre su ficha), sectores, su ficha (comisión, patrimonio, yield…) y la mezcla
+  de activos. Si el portal no responde, la pantalla queda como antes. El buscador marca los fondos
+  ("ETF", "Mutual fund") y un fondo se puede seguir (el portal lo acepta desde el 2026-10-15).
+  **Options Lab** se añade a las herramientas de More (`lib/tools.ts`, icono el de la web). Tipos en
+  `lib/types.ts` (`QuoteMore`, copia de `site/src/lib/market.ts` del portal). Comprobado: `tsc` y
+  lint en verde; `expo-doctor` 20/21 (5 paquetes con un parche más nuevo, como antes de este
+  cambio). Visto en la vista de navegador (375 px) contra el portal en local con Yahoo de verdad
+  (`mobile-api-live-windows` en `.claude/launch.json` del workspace): SCHD y AAPL con todas sus
+  secciones, buscar "vfiax" y seguirlo. **No se pudo ver** abrir Options Lab dentro de la app (el
+  WebView no existe en la vista de navegador): queda para el simulador o el teléfono.
 
 - **Estado al cerrar el 2026-10-13**: la app de iPhone está **en revisión en Apple** (1.0.0,
   build 4). Lo que queda, por orden de lo que más importa:

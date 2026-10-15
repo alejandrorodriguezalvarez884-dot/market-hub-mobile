@@ -66,4 +66,41 @@ export type News = { sample: boolean; items: NewsItem[]; refreshed_utc: string |
 export type User = { id: string; email: string; name: string; picture: string; provider?: "google" | "password" | "apple" };
 export type Position = { ticker: string; shares: number; avg_cost: number | null };
 export type Portfolio = { positions: Position[]; watchlist: string[]; updated_utc?: string };
-export type Company = { ticker: string; name: string };
+export type Company = { ticker: string; name: string; kind?: string }; // kind: "ETF" or "Mutual fund", for a fund
+
+// The rest of a stock's or a fund's page (/api/public/quote/more; the site's lib/market.ts): its
+// past against the S&P 500 and, for a company or a fund, what the provider says of it. Every
+// figure may be null.
+type F = number | null;
+export type QuoteDay = { date: string; return: number };
+export type Fall = { depth: number; peak: string; trough: string };
+export type History = {
+  benchmark: string | null; dates: string[]; closes: number[]; benchmark_closes: (number | null)[] | null;
+  years: { year: number; return: F; benchmark: F; partial: boolean }[];
+  risk: { volatility_1y: F; benchmark_volatility_1y: F; beta_1y: F; up_days_1y: F; best_day: QuoteDay | null; worst_day: QuoteDay | null;
+          max_drawdown: Fall | null; benchmark_max_drawdown: Fall | null };
+};
+export type QuotePeriod = { end: string; revenue: F; gross_profit: F; operating_income: F; net_income: F; eps: F };
+export type CompanyFacts = {
+  summary: string; sector: string; industry: string; employees: F; website: string; city: string; state: string; country: string;
+  valuation: { pe: F; forward_pe: F; ps: F; pb: F; ev_ebitda: F; ev_revenue: F; enterprise_value: F };
+  profitability: { gross_margin: F; operating_margin: F; net_margin: F; roe: F; roa: F };
+  growth: { revenue: F; earnings: F };
+  health: { revenue: F; ebitda: F; free_cash_flow: F; cash: F; debt: F; debt_to_equity: F; current_ratio: F };
+  ownership: { insiders: F; institutions: F; short_of_float: F; shares: F; float: F };
+  dividends: { rate: F; payout_ratio: F; ex_date: string | null; five_year_avg_yield: F };
+  next_results: string | null;
+};
+export type Weight = { name: string; weight: number };
+export type Fund = {
+  summary: string; legal_type: string; family: string; category: string; expense_ratio: F; assets: F; yield: F; nav: F;
+  inception: string | null; beta_3y: F; return_3y: F; return_5y: F; return_ytd: F;
+  holdings: { symbol: string | null; label: string; name: string; weight: number }[]; holdings_weight: F;
+  sectors: Weight[]; asset_mix: Weight[];
+};
+export type QuoteMore = {
+  symbol: string; source: string; history: History | null;
+  type?: "stock" | "fund";
+  company?: CompanyFacts; financials?: { annual: QuotePeriod[]; quarterly: QuotePeriod[] };
+  fund_type?: "ETF" | "Mutual fund"; fund?: Fund;
+};
