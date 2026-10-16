@@ -27,6 +27,14 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 ## Dónde estamos
 
+- **2026-10-16: el eslogan pasa a "Your portfolio, powered by AI."**, como en el portal. Cambiado
+  en `store/app-store/art/header.html` y `search.html` (en la de búsqueda el titular baja de 248 a
+  230 px y "powered by AI." va junto, para que "AI." no quede sola en una línea), y redibujadas
+  las dos imágenes. Se dibujaron desde Windows con Chrome y Pillow (quitando el canal alfa, que
+  es lo que hace `sips` en `make art`, que solo corre en el Mac). **No se han subido a App Store
+  Connect**: cambiarlas en la ficha de la tienda es decisión del usuario. La app no lleva el
+  eslogan en su código.
+
 - **2026-10-15: la ficha de valor del portal, en la app, y Options Lab** (a petición del usuario).
   **Versión 1.1.0, build 5, compilada y subida a App Store Connect para TestFlight** el mismo día
   (`eas build --platform ios --profile production --auto-submit` desde Windows con `npx.cmd`, porque
