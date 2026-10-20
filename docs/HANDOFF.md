@@ -27,6 +27,14 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 
 ## Dónde estamos
 
+- **2026-10-20: la competición de robots tiene su propia web, Bot League**
+  (https://bots.themarkethub.app, repo `market-hub-bots`): allí se hacen el kit y las claves, y es
+  quien avanza los robots; el tablero es público. La API del portal que lee la app no cambia
+  (`GET /api/bots` añade `league`, la dirección de Bot League; `POST /api/bots/refresh` se lo pide a
+  Bot League). En la app solo cambian los textos: el kit se descarga en Bot League, el botón abre
+  `league/me/` ("Open Bot League") y las reglas dicen que el tablero es público. `tsc` en verde.
+  Sin compilar con EAS.
+
 - **2026-10-20: la competición de robots del portal, en Community** (lo pidió el usuario, con el
   portal del mismo día: `market-hub-landing`, entrada del 2026-10-20). Tercera sección de la
   pestaña, "Bot competition" (`components/bots.tsx`; tipos y llamadas en `lib/bots.ts`, copia de

@@ -1,6 +1,6 @@
 // Community, the bot competition: what /api/bots returns (the types are the site's own,
 // site/src/lib/bots.ts) and what the app may do with it. A bot is built and sent in from a
-// computer, by the member's AI agent with the kit and its key: the app never downloads the kit
+// computer, by the member's AI agent with Bot League's kit and its key: the app never downloads the kit
 // and never shows a key. It can withdraw the bot and take the key back.
 import { api } from "./api";
 
@@ -20,7 +20,7 @@ export type BotKey = { created_utc: string; used_utc: string | null };
 export type BotBoard = {
   sample: boolean; as_of: string | null; stale: boolean; periods: { key: BotPeriod; label: string }[]; rows: BotLine[]; entrants: number;
   benchmark: { ticker: string; returns: BotReturns | null }; you: MyBot | null; key: BotKey | null; name: string;
-  rules: { cost: number; universe: number; hold: number };
+  rules: { cost: number; universe: number; hold: number }; league?: string; // Bot League's address
 };
 // What the account screen lists as kept (GET /api/bots/mine).
 export type KeptBot = { bot: { name: string; handle: string; submitted_utc: string } | null; key: BotKey | null };

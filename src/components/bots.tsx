@@ -2,8 +2,8 @@
 // member's bot (its returns and rank by period, its record, what it holds and its rules), how one
 // is built, the board over the day, week, month, year and since each bot started with the S&P 500
 // among the lines, and the rules. A bot is built and sent in from a computer, by the member's AI
-// agent: the app explains that and links to the web page; it never downloads the kit nor shows a
-// key. It can withdraw the bot and take the key back.
+// agent, with the kit of Bot League (the competition's own site): the app explains that and links
+// there; it never downloads the kit nor shows a key. It can withdraw the bot and take the key back.
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -18,6 +18,8 @@ import { openPage, openQuote } from "@/lib/hub";
 import { color, space } from "@/lib/theme";
 
 export const BOTS_PAGE = `${SITE}/community/bots/`;
+// The competition's own site: the kit, the keys and the whole board (/api/bots names it as "league").
+export const BOT_LEAGUE = "https://bots.themarkethub.app";
 
 export function Bots({ b, reload }: { b: BotBoard; reload: () => void }) {
   const [period, setPeriod] = useState<BotPeriod>("1m");
@@ -54,7 +56,7 @@ function Mine({ b, reload }: { b: BotBoard; reload: () => void }) {
   if (!you) {
     return (
       <Section title="Your bot" note="No bot yet">
-        <Txt size={14} style={{ lineHeight: 21 }}>A bot here is a few rules, not code: which of the largest US companies it looks at, what it scores them on, how many it holds and how often it looks again. Your AI agent writes them with you, backtests them and sends them in. Market Hub runs the bot on paper, with no money and no broker, and ranks it from the next close.</Txt>
+        <Txt size={14} style={{ lineHeight: 21 }}>A bot here is a few rules, not code: which of the largest US companies it looks at, what it scores them on, how many it holds and how often it looks again. Your AI agent writes them with you, backtests them and sends them in. Bot League runs the bot on paper, with no money and no broker, and ranks it from the next close.</Txt>
       </Section>
     );
   }
@@ -137,7 +139,7 @@ function Build({ b, reload }: { b: BotBoard; reload: () => void }) {
   const [error, setError] = useState<string | null>(null);
 
   async function takeBack() {
-    if (!(await confirm("Take your key back?", "Your agent can no longer send in or follow your bot until you make a new key on the web page.", "Take it back"))) return;
+    if (!(await confirm("Take your key back?", "Your agent can no longer send in or follow your bot until you make a new key in Bot League.", "Take it back"))) return;
     setBusy(true);
     setError(null);
     try {
@@ -151,7 +153,7 @@ function Build({ b, reload }: { b: BotBoard; reload: () => void }) {
   }
 
   const steps = [
-    ["Download the kit", "On a computer, from the web page: a folder with the instructions for your agent, the format of a bot, examples and a small tool. It comes with your key in it."],
+    ["Download the kit", "On a computer, from Bot League (bots.themarkethub.app), with your same account: a folder with the instructions for your agent, the format of a bot, examples and a small tool. It comes with your key in it."],
     ["Open the folder with your agent", "Unzip it and open it with Claude Code, Codex or the agent you use (in a terminal: cd into it and run claude or codex)."],
     ["Say “Let's build my bot”", "It asks what you have in mind, or proposes ideas, writes the rules, backtests them against the S&P 500 and sends the bot in when you say so."],
   ];
@@ -168,13 +170,13 @@ function Build({ b, reload }: { b: BotBoard; reload: () => void }) {
           </View>
         ))}
       </View>
-      <Button title="Open the page on the web" kind="ghost" onPress={() => openPage(BOTS_PAGE)} style={{ marginTop: space.lg }} />
+      <Button title="Open Bot League" kind="ghost" onPress={() => openPage(`${b.league ?? BOT_LEAGUE}/me/`)} style={{ marginTop: space.lg }} />
 
       <View style={styles.key}>
         <Label>Your key</Label>
         <Txt size={13} tone="muted" style={{ marginTop: 4, lineHeight: 19 }}>{b.key
           ? `Made ${timeAgo(b.key.created_utc)}, ${b.key.used_utc ? `last used ${timeAgo(b.key.used_utc)}` : "not used yet"}. It lets your agent check, backtest and send in your bot, nothing else. Keep it to yourself.`
-          : "No key: your agent needs one. Downloading the kit on the web page makes one."}</Txt>
+          : "No key: your agent needs one. Downloading the kit in Bot League makes one."}</Txt>
         {b.key ? <Button title="Take it back" kind="ghost" onPress={takeBack} busy={busy} style={{ marginTop: space.md }} /> : null}
         {error ? <View style={{ marginTop: space.md }}><Notice text={error} /></View> : null}
       </View>
@@ -260,13 +262,13 @@ function Row({ r, period, first, open, onToggle }: { r: BotLine; period: BotPeri
 
 function Rules({ b }: { b: BotBoard }) {
   const items = [
-    "A bot is a set of rules in a file, not code: the format is in the kit (SPEC.md). Your agent writes it with you.",
+    "A bot is a set of rules in a file, not code: the format is in Bot League's kit. Your agent writes it with you.",
     `It chooses among the ${b.rules.universe} largest US companies, funds left out, and holds up to ${b.rules.hold} of them. Long only: no short sales, no borrowing.`,
-    "Market Hub runs it on paper: no money, no broker, no orders. On the sessions it looks again it decides at the close and trades at that close.",
+    "Bot League runs it on paper: no money, no broker, no orders. On the sessions it looks again it decides at the close and trades at that close.",
     `Each trade pays ${pct(b.rules.cost, 2)} of what is traded. Returns are on price, dividends left out, and cash earns nothing.`,
     "Its record starts at the first close after you send it in. Nothing before counts: a backtest is for you alone.",
     "One bot per member. Sending in another one replaces it and starts its record again.",
-    "Other members see your name, the bot's name and idea, its returns and what it holds. Its rules are yours alone.",
+    "The board is public, in Bot League and in Market Hub: anyone sees your name, the bot's name and idea, its returns and what it holds. Its rules are yours alone.",
   ];
   return (
     <Section title="How it works">
