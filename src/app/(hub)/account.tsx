@@ -7,6 +7,7 @@ import { Pressable, StyleSheet, View, type TextInput } from "react-native";
 import { Button, Field, Label, Notice, Screen, Section, Txt } from "@/components/ui";
 import { SITE, api, message } from "@/lib/api";
 import { tellAppleBeforeDeleting } from "@/lib/apple";
+import { keptBot, type KeptBot } from "@/lib/bots";
 import { blocked, unblock, type Blocked, type Entry } from "@/lib/community";
 import { confirm } from "@/lib/confirm";
 import { openPage } from "@/lib/hub";
@@ -16,18 +17,19 @@ import { color, space } from "@/lib/theme";
 import type { Portfolio, Sharing } from "@/lib/types";
 
 type Mine = { id: string; slug: string; text: string; created_utc: string };
-type Kept = { portfolio: Portfolio; sharing: Sharing; entries: Entry[]; comments: Mine[]; blocked: Blocked[] };
+type Kept = { portfolio: Portfolio; sharing: Sharing; entries: Entry[]; robot: KeptBot; comments: Mine[]; blocked: Blocked[] };
 
 // What is saved now. The portfolio has to come; the rest is shown as empty if it does not.
 async function getKept(): Promise<Kept> {
-  const [portfolio, sharing, played, said, hidden] = await Promise.all([
+  const [portfolio, sharing, played, robot, said, hidden] = await Promise.all([
     api<Portfolio>("/api/portfolio"),
     api<Sharing>("/api/sharing").catch(() => ({ enabled: false, handle: "", since_utc: null })),
     api<{ entries: Entry[] }>("/api/competitions/mine").catch(() => ({ entries: [] })),
+    keptBot().catch((): KeptBot => ({ bot: null, key: null })),
     api<{ comments: Mine[] }>("/api/opinion/mine").catch(() => ({ comments: [] })),
     blocked().catch(() => ({ blocked: [] })),
   ]);
-  return { portfolio, sharing, entries: played.entries, comments: said.comments, blocked: hidden.blocked };
+  return { portfolio, sharing, entries: played.entries, robot, comments: said.comments, blocked: hidden.blocked };
 }
 
 const month = (m: string) => new Date(`${m}-01T00:00:00Z`).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -59,7 +61,7 @@ export default function Account() {
   }
 
   async function remove() {
-    const sure = await confirm("Delete your account?", "Your positions, your watchlist, what you share in Community, your entries to the competition and your comments are deleted for good. This cannot be undone.", "Delete");
+    const sure = await confirm("Delete your account?", "Your positions, your watchlist, what you share in Community, your entries to the competition, your bot and its key, and your comments are deleted for good. This cannot be undone.", "Delete");
     if (!sure) return;
     setDeleting(true);
     setError(null);
@@ -106,6 +108,12 @@ export default function Account() {
                 <Value key={e.month}>{month(e.month)}, as &quot;{e.handle}&quot;: {e.picks.map((p) => `${p.ticker} ${p.weight}%`).join(", ")}</Value>
               )) : <Value>No entries.</Value>}
             </Row>
+            <Row label="Bot">
+              <Value>{kept.robot.bot ? `"${kept.robot.bot.name}", shown as "${kept.robot.bot.handle}": its rules, the companies it chooses among and its record.` : "No bot."}
+                {kept.robot.key ? " You have a key for your agent." : ""}</Value>
+              <Txt size={13} tone="muted" style={styles.link} accessibilityRole="link" onPress={() => router.navigate("/community?part=bots")}>
+                {kept.robot.bot || kept.robot.key ? "See it, withdraw it or take the key back" : "About the bot competition"}</Txt>
+            </Row>
             <Row label="Comments">
               <Value>{kept.comments.length
                 ? `${kept.comments.length}: under articles they are public, with your first name; in the competition members see them, with the name you play under.` : "None"}</Value>
@@ -134,7 +142,7 @@ export default function Account() {
 
       {own ? <NewPassword /> : null}
 
-      <Section title="Delete account" note={`Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition, empties the comments you wrote and drops your reports and your blocks. Signing in again later starts from zero.${user?.provider === "apple" ? " Your iPhone asks you to confirm with Apple first, so that Apple stops listing the app under your Apple account." : ""}`}>
+      <Section title="Delete account" note={`Removes your positions, watchlist and profile at once, takes your portfolio off the community board, removes your entries to the competition, withdraws your bot and its key, empties the comments you wrote and drops your reports and your blocks. Signing in again later starts from zero.${user?.provider === "apple" ? " Your iPhone asks you to confirm with Apple first, so that Apple stops listing the app under your Apple account." : ""}`}>
         {error ? <View style={{ marginBottom: space.md }}><Notice text={error} /></View> : null}
         <Button title="Delete my account" kind="danger" onPress={remove} busy={deleting} />
       </Section>

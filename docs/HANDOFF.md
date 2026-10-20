@@ -1,6 +1,6 @@
 # Estado del proyecto y cómo continuar
 
-Última actualización: 2026-10-15.
+Última actualización: 2026-10-20.
 
 ## Qué se pidió
 
@@ -26,6 +26,30 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
 | 6b | App Store y TestFlight | **Enviada a revisión** por el usuario el 2026-10-13 a las 20:50: versión 1.0.0, **build 4**, estado "Waiting for Review". Si Apple la aprueba, sale sola a la tienda (decisión del usuario). Todo lo que se puso en la ficha y por qué está en `store/app-store/LISTING.md`. Si la rechaza, el motivo llega al correo del usuario y a App Store Connect (App Review) |
 
 ## Dónde estamos
+
+- **2026-10-20: la competición de robots del portal, en Community** (lo pidió el usuario, con el
+  portal del mismo día: `market-hub-landing`, entrada del 2026-10-20). Tercera sección de la
+  pestaña, "Bot competition" (`components/bots.tsx`; tipos y llamadas en `lib/bots.ts`, copia de
+  `site/src/lib/bots.ts` del portal), que lee `GET /api/bots` con el token, como la página
+  `/community/bots/` de la web: el robot del usuario (nombre, idea, desde cuándo corre, rentabilidad
+  y puesto por Day / Week / Month / Year / Since start, su curva, lo que tiene ahora y sus reglas
+  plegadas, que solo ve él), cómo se hace uno (los tres pasos, **en un ordenador y con su agente**:
+  la app no descarga el kit ni enseña claves, y enlaza a la página de la web), el estado de su clave,
+  el tablero por periodo con la línea del S&P 500 (SPY) entre los robots (en "Since start" no sale:
+  el portal no la da, como en la web) y cada línea abriéndose sobre su idea y lo que tiene, y las
+  reglas. Desde la app se puede **retirar el robot** (`DELETE /api/bots/mine`) y **quitar la clave**
+  (`DELETE /api/bots/key`), con confirmación. Si el tablero está atrasado, la visita pide el
+  refresco (`POST /api/bots/refresh`), como la web. En Account, "What we keep" lleva la fila "Bot"
+  (de `GET /api/bots/mine`, con enlace a la sección: `/community?part=bots`) y la nota de borrar la
+  cuenta dice que se retira el robot y su clave. Comprobado: `tsc` y lint en verde; `expo-doctor`
+  20/21 (los mismos paquetes con parche más nuevo que antes). Visto en la vista de navegador
+  (375 px) contra el portal en local con cifras de ejemplo (`mobile-api-windows`): sin robot, un
+  robot recién enviado (por la API del agente con una clave de prueba), el mismo adelantado
+  (cifras, puestos, curva, posiciones, reglas), el tablero en los cinco periodos con una línea
+  abierta, Account con la fila nueva y su enlace, retirar y quitar la clave. **Sin ver** en el
+  simulador ni en un teléfono, y **sin compilar** (ni EAS ni tiendas: decisión del usuario). El
+  portal con los robots **no está desplegado** todavía: hasta que lo esté, la sección dice el error
+  del portal.
 
 - **2026-10-16: el eslogan pasa a "Your portfolio, powered by AI."**, como en el portal. Cambiado
   en `store/app-store/art/header.html` y `search.html` (en la de búsqueda el titular baja de 248 a
@@ -101,7 +125,7 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
     (`components/reading.tsx`): precio frente a su media de 50, tendencia, fuerza frente al
     índice, sector, momentum, rango de 52 semanas, volumen, crecimiento por consenso y PER. Las
     frases del modelo sustituyen a las del código cuando llegan (`/api/watchlist/read`).
-  - **Community** (`community.tsx`), con sus dos secciones:
+  - **Community** (`community.tsx`), con sus tres secciones (`?part=bots` abre la tercera):
     - *Shared portfolios* (`components/shared-portfolios.tsx`): compartir la cartera (los tres
       pasos, el nombre, dejar de compartir), dónde estás por periodo y el ranking con índices y
       media; una línea se abre sobre lo que tiene esa cartera.
@@ -110,6 +134,9 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
       líneas, hasta seis), clasificación, discusión del mes (`components/thread.tsx`: comentar,
       responder, borrar), el formulario de la apuesta (pesos con − / + y campo, porque React
       Native no trae un deslizador), el historial y las reglas.
+    - *Bot competition* (`components/bots.tsx`, 2026-10-20): el robot del usuario, cómo se hace
+      uno con su agente (en un ordenador; la app enlaza a la web), su clave, el tablero por
+      periodo con SPY y las reglas. Retirar el robot y quitar la clave se hace aquí.
   - **More** (`more.tsx`): lo que no tiene pestaña. Portfolio y Account and data (pantallas de la
     app), las cuatro herramientas (Fundamentals Lab, Earnings Radar, Peer Map y Playground), que
     se abren **dentro de la app**, las secciones públicas (Markets, News, Opinion, Media) y Help
@@ -121,8 +148,8 @@ https://themarkethub.app), publicada en las dos tiendas. Decisiones del usuario 
     medio, este opcional) o a la watchlist; quitar; guardar. Se llega desde Overview ("Edit"),
     Analysis, Watchlist, Community y More.
   - **Account** (`account.tsx`): quién ha entrado, salir, **lo que se guarda** tal como está
-    ahora (nombre, email, forma de entrar, posiciones, watchlist, cartera compartida, apuestas y
-    comentarios, como en `/account/` de la web), enlace a la página de privacidad, **cambiar la
+    ahora (nombre, email, forma de entrar, posiciones, watchlist, cartera compartida, apuestas, robot y
+    clave, y comentarios, como en `/account/` de la web), enlace a la página de privacidad, **cambiar la
     contraseña** (solo cuentas de email; `PUT /api/auth/password` con el token) y **borrar la
     cuenta** (lo pide Apple a toda app con cuentas), con confirmación.
 - **Sesión** (`src/lib/session.tsx`, `api.ts`, `storage.ts`): la app manda email y contraseña a
